@@ -1,0 +1,170 @@
+---
+layout: base.njk
+---
+
+<!-- Fixed Nav -->
+<nav class="fixed-nav" id="fixedNav">
+  <div class="fixed-nav__inner">
+    <span class="fixed-nav__logo">DT</span>
+    <div class="fixed-nav__links">
+      <a href="#work">Work</a>
+      <a href="#studio">Studio</a>
+      <a href="#contact">Contact</a>
+    </div>
+  </div>
+</nav>
+
+<!-- Section 1: Hero -->
+<section class="hero" id="hero" style="background-image: url('{{ hero.image }}');">
+  <div class="hero__overlay"></div>
+  <div class="hero__content">
+    <h1 class="hero__name">{{ bio.name }}</h1>
+    <p class="hero__title">{{ bio.headline }}</p>
+  </div>
+</section>
+
+<!-- Section 2: Identity -->
+<section class="section identity" id="identity">
+  <div class="section__image-header">
+    <img src="{{ bio.image }}" alt="{{ bio.name }} in the studio" class="hover-lift">
+  </div>
+  <div class="section__content fade-in">
+    <p class="identity__statement">{{ bio.statement }}</p>
+    {% for detail in bio.details %}
+    <p class="identity__detail">{{ detail }}</p>
+    {% endfor %}
+    <p class="identity__tagline">{{ bio.tagline }}</p>
+  </div>
+</section>
+
+<!-- Section 3: Work -->
+<section class="section work" id="work">
+  <div class="section__image-header">
+    <img src="{{ tracks.image }}" alt="Hands on the gear" class="hover-lift">
+  </div>
+  <div class="section__content fade-in">
+    <h2 class="section__heading">Work</h2>
+    <p class="work__subhead">Emotion first. Always.</p>
+
+    <!-- A/B Featured Tracks -->
+    <div class="ab-player" id="abPlayer">
+      <h3 class="work__label">Before & After</h3>
+      <div class="ab-tracks">
+        {% for track in tracks.ab_tracks %}
+        <div class="ab-track" data-before="{{ track.before_audio }}" data-after="{{ track.after_audio }}">
+          <div class="ab-track__info">
+            <span class="ab-track__artist">{{ track.artist }}</span>
+            <span class="ab-track__title">{{ track.title }}</span>
+            <span class="ab-track__genre">{{ track.genre }}</span>
+          </div>
+          <div class="ab-track__controls">
+            <button class="ab-track__play" aria-label="Play">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><polygon points="5,3 19,12 5,21"/></svg>
+            </button>
+            <div class="ab-track__progress">
+              <div class="ab-track__progress-bar"></div>
+            </div>
+            <div class="ab-track__toggle">
+              <button class="ab-toggle ab-toggle--before ab-toggle--active">Before</button>
+              <button class="ab-toggle ab-toggle--after">After</button>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+
+    <!-- Standard Track List -->
+    <div class="tracklist" id="tracklist">
+      <h3 class="work__label">Selected Work</h3>
+      <div class="tracklist__tracks">
+        {% for track in tracks.selected_work %}
+        <div class="tracklist__track" data-src="{{ track.audio_src }}">
+          <button class="tracklist__play" aria-label="Play">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><polygon points="5,3 19,12 5,21"/></svg>
+          </button>
+          <span class="tracklist__artist">{{ track.artist }}</span>
+          <span class="tracklist__divider">/</span>
+          <span class="tracklist__title">{{ track.title }}</span>
+          <span class="tracklist__genre">{{ track.genre }}</span>
+        </div>
+        {% endfor %}
+      </div>
+      <a href="{{ tracks.credits_link }}" class="work__credits-link" target="_blank" rel="noopener">Full Credits &rarr;</a>
+    </div>
+  </div>
+</section>
+
+<!-- Section 4: Podcasts & Brands -->
+<section class="section brands" id="brands">
+  <div class="section__image-header">
+    <img src="{{ brands.image }}" alt="Daniel working at Robot Slap Studio" class="hover-lift">
+  </div>
+  <div class="section__content fade-in">
+    <h2 class="section__heading">Podcasts & Brands</h2>
+    <div class="brands__grid">
+      {% for item in brands.items %}
+      <div class="brands__item">
+        <span class="brands__name">{{ item.name }}</span>
+        <span class="brands__project">{{ item.project }}</span>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<!-- Section 5: Studio -->
+<section class="section studio" id="studio">
+  <div class="section__image-header">
+    <img src="{{ studio.image }}" alt="{{ studio.name }} overhead view" class="hover-lift">
+  </div>
+  <div class="section__content fade-in">
+    <h2 class="section__heading">{{ studio.name }}</h2>
+    {% for paragraph in studio.paragraphs %}
+    <p class="studio__text">{{ paragraph }}</p>
+    {% endfor %}
+  </div>
+</section>
+
+<!-- Section 6: Contact -->
+<section class="section contact" id="contact">
+  <div class="section__image-header">
+    <img src="{{ contact.image }}" alt="{{ bio.name }}" class="hover-lift">
+  </div>
+  <div class="section__content fade-in">
+    <h2 class="section__heading">{{ contact.heading }}</h2>
+    <p class="contact__subtext">{{ contact.subtext }}</p>
+    <form class="contact__form" id="contactForm">
+      <div class="contact__field">
+        <label for="name">Name</label>
+        <input type="text" id="name" name="name" required>
+      </div>
+      <div class="contact__field">
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" required>
+      </div>
+      <div class="contact__field">
+        <label for="project">Tell me about your project</label>
+        <textarea id="project" name="project" rows="4"></textarea>
+      </div>
+      <div class="contact__field">
+        <label for="demo">Link to demo or reference (optional)</label>
+        <input type="url" id="demo" name="demo" placeholder="Dropbox, Google Drive, etc.">
+      </div>
+      <button type="submit" class="contact__submit">Send Inquiry</button>
+    </form>
+  </div>
+</section>
+
+<!-- Malcolm -->
+<div class="section__image-header malcolm-image">
+  <img src="{{ malcolm.image }}" alt="{{ malcolm.alt }}" class="hover-lift">
+</div>
+
+<!-- Footer -->
+<footer class="footer">
+  <div class="footer__inner">
+    <span class="footer__logo">Robot Slap</span>
+    <span class="footer__copy">&copy; 2026 {{ bio.name }}. All rights reserved.</span>
+  </div>
+</footer>

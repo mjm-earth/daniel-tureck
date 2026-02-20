@@ -1,0 +1,104 @@
+backend:
+  name: github
+  repo: mjm-earth/daniel-tureck
+  branch: main
+
+media_folder: "src/assets"
+public_folder: "/assets"
+
+collections:
+  - name: "settings"
+    label: "Site Settings"
+    files:
+      - name: "site"
+        label: "Site Info"
+        file: "src/_data/site.json"
+        fields:
+          - { label: "Site Title", name: "title", widget: "string" }
+          - { label: "Meta Description", name: "description", widget: "text" }
+          - { label: "Site URL", name: "url", widget: "string", required: false }
+
+  - name: "sections"
+    label: "Page Sections"
+    files:
+      - name: "hero"
+        label: "Hero"
+        file: "src/_data/hero.json"
+        fields:
+          - { label: "Background Image", name: "image", widget: "image" }
+
+      - name: "bio"
+        label: "Bio"
+        file: "src/_data/bio.json"
+        fields:
+          - { label: "Name", name: "name", widget: "string" }
+          - { label: "Headline", name: "headline", widget: "string" }
+          - { label: "Photo", name: "image", widget: "image" }
+          - { label: "Opening Statement", name: "statement", widget: "text" }
+          - label: "Bio Paragraphs"
+            name: "details"
+            widget: "list"
+            field: { label: "Paragraph", name: "paragraph", widget: "text" }
+          - { label: "Tagline", name: "tagline", widget: "string" }
+
+      - name: "tracks"
+        label: "Work / Tracks"
+        file: "src/_data/tracks.json"
+        fields:
+          - { label: "Section Photo", name: "image", widget: "image" }
+          - label: "Before & After Tracks"
+            name: "ab_tracks"
+            widget: "list"
+            fields:
+              - { label: "Artist", name: "artist", widget: "string" }
+              - { label: "Track Title", name: "title", widget: "string" }
+              - { label: "Genre", name: "genre", widget: "string" }
+              - { label: "Before Audio", name: "before_audio", widget: "file" }
+              - { label: "After Audio", name: "after_audio", widget: "file" }
+          - label: "Selected Work"
+            name: "selected_work"
+            widget: "list"
+            fields:
+              - { label: "Artist", name: "artist", widget: "string" }
+              - { label: "Track Title", name: "title", widget: "string" }
+              - { label: "Genre", name: "genre", widget: "string" }
+              - { label: "Audio File", name: "audio_src", widget: "file" }
+          - { label: "Full Credits Link", name: "credits_link", widget: "string" }
+
+      - name: "brands"
+        label: "Podcasts & Brands"
+        file: "src/_data/brands.json"
+        fields:
+          - { label: "Section Photo", name: "image", widget: "image" }
+          - label: "Brands"
+            name: "items"
+            widget: "list"
+            fields:
+              - { label: "Brand Name", name: "name", widget: "string" }
+              - { label: "Project(s)", name: "project", widget: "string" }
+
+      - name: "studio"
+        label: "Studio"
+        file: "src/_data/studio.json"
+        fields:
+          - { label: "Studio Name", name: "name", widget: "string" }
+          - { label: "Photo", name: "image", widget: "image" }
+          - label: "Description Paragraphs"
+            name: "paragraphs"
+            widget: "list"
+            field: { label: "Paragraph", name: "paragraph", widget: "text" }
+
+      - name: "contact"
+        label: "Contact"
+        file: "src/_data/contact.json"
+        fields:
+          - { label: "Heading", name: "heading", widget: "string" }
+          - { label: "Subtext", name: "subtext", widget: "string" }
+          - { label: "Photo", name: "image", widget: "image" }
+
+      - name: "malcolm"
+        label: "Malcolm Photo"
+        file: "src/_data/malcolm.json"
+        fields:
+          - { label: "Photo", name: "image", widget: "image" }
+          - { label: "Alt Text", name: "alt", widget: "string" }
