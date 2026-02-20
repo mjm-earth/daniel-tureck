@@ -5,13 +5,52 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>{{ site.title }}</title>
   <meta name="description" content="{{ site.description }}">
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="{{ site.title }}">
+  <meta property="og:description" content="{{ site.description }}">
+  <meta property="og:image" content="{{ site.url }}{{ hero.image | url }}">
+  <meta property="og:url" content="{{ site.url }}/">
+  <meta property="og:type" content="website">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="{{ site.title }}">
+  <meta name="twitter:description" content="{{ site.description }}">
+  <meta name="twitter:image" content="{{ site.url }}{{ hero.image | url }}">
+
+  <!-- Canonical -->
+  <link rel="canonical" href="{{ site.url }}/">
+
+  <!-- Preload hero image -->
+  <link rel="preload" href="{{ hero.image | url }}" as="image">
+
+  <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
   <link rel="stylesheet" href="{{ '/css/style.css' | url }}">
+
+  <!-- Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "name": "{{ bio.name }}",
+    "jobTitle": "{{ bio.headline }}",
+    "description": "{{ site.description }}",
+    "url": "{{ site.url }}/",
+    "image": "{{ site.url }}{{ bio.image | url }}",
+    "workLocation": {
+      "@type": "Place",
+      "name": "{{ studio.name }}"
+    }
+  }
+  </script>
 </head>
 <body>
   {{ content | safe }}
-  <script src="{{ '/js/main.js' | url }}"></script>
+  <script src="{{ '/js/main.js' | url }}" defer></script>
 </body>
 </html>
