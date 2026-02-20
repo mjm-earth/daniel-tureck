@@ -23,84 +23,67 @@ collections:
   - name: "sections"
     label: "Page Sections"
     files:
-      - name: "hero"
-        label: "Hero"
-        file: "src/_data/hero.json"
-        fields:
-          - { label: "Background Image", name: "image", widget: "image" }
-
       - name: "bio"
-        label: "Bio"
+        label: "Bio / Hero"
         file: "src/_data/bio.json"
         fields:
           - { label: "Name", name: "name", widget: "string" }
           - { label: "Headline", name: "headline", widget: "string" }
-          - { label: "Photo", name: "image", widget: "image" }
-          - { label: "Opening Statement", name: "statement", widget: "text" }
-          - label: "Bio Paragraphs"
-            name: "details"
+          - { label: "Main Photo", name: "photo", widget: "image" }
+          - { label: "Phrase", name: "phrase", widget: "string", hint: "Big text below main photo" }
+
+      - name: "narrative"
+        label: "Narrative"
+        file: "src/_data/narrative.json"
+        fields:
+          - { label: "Heading", name: "heading", widget: "string" }
+          - label: "Paragraphs"
+            name: "paragraphs"
             widget: "list"
             field: { label: "Paragraph", name: "paragraph", widget: "text" }
-          - { label: "Tagline", name: "tagline", widget: "string" }
 
-      - name: "tracks"
-        label: "Work / Tracks"
-        file: "src/_data/tracks.json"
+      - name: "photos"
+        label: "Photos"
+        file: "src/_data/photos.json"
         fields:
-          - { label: "Section Photo", name: "image", widget: "image" }
-          - label: "Before & After Tracks"
-            name: "ab_tracks"
+          - label: "Photo Grid"
+            name: "grid"
             widget: "list"
             fields:
-              - { label: "Artist", name: "artist", widget: "string" }
-              - { label: "Track Title", name: "title", widget: "string" }
-              - { label: "Genre", name: "genre", widget: "string" }
-              - { label: "Before Audio", name: "before_audio", widget: "file" }
-              - { label: "After Audio", name: "after_audio", widget: "file" }
-          - label: "Selected Work"
-            name: "selected_work"
-            widget: "list"
+              - { label: "Image", name: "image", widget: "image" }
+              - { label: "Alt Text", name: "alt", widget: "string" }
+          - label: "Wide Photo"
+            name: "wide"
+            widget: "object"
             fields:
-              - { label: "Artist", name: "artist", widget: "string" }
-              - { label: "Track Title", name: "title", widget: "string" }
-              - { label: "Genre", name: "genre", widget: "string" }
-              - { label: "Audio File", name: "audio_src", widget: "file" }
-          - { label: "Full Credits Link", name: "credits_link", widget: "string" }
-
-      - name: "brands"
-        label: "Podcasts & Brands"
-        file: "src/_data/brands.json"
-        fields:
-          - { label: "Section Photo", name: "image", widget: "image" }
-          - label: "Brands"
-            name: "items"
-            widget: "list"
-            fields:
-              - { label: "Brand Name", name: "name", widget: "string" }
-              - { label: "Project(s)", name: "project", widget: "string" }
+              - { label: "Image", name: "image", widget: "image" }
+              - { label: "Alt Text", name: "alt", widget: "string" }
 
       - name: "studio"
         label: "Studio"
         file: "src/_data/studio.json"
         fields:
           - { label: "Studio Name", name: "name", widget: "string" }
+          - { label: "Heading", name: "heading", widget: "string" }
           - { label: "Photo", name: "image", widget: "image" }
-          - label: "Description Paragraphs"
+          - label: "Description"
             name: "paragraphs"
             widget: "list"
             field: { label: "Paragraph", name: "paragraph", widget: "text" }
 
-      - name: "contact"
-        label: "Contact"
-        file: "src/_data/contact.json"
+      - name: "tracks"
+        label: "Listen / Work"
+        file: "src/_data/tracks.json"
+        fields:
+          - { label: "Artists List", name: "artists", widget: "text", hint: "Separate with · (middle dot)" }
+          - { label: "Player Embed Code", name: "player_embed", widget: "text", required: false, hint: "Paste Spotify, SoundCloud, or other embed HTML" }
+          - { label: "Credits Link", name: "credits_link", widget: "string" }
+          - { label: "Credits Link Text", name: "credits_text", widget: "string" }
+
+      - name: "cta"
+        label: "Contact / CTA"
+        file: "src/_data/cta.json"
         fields:
           - { label: "Heading", name: "heading", widget: "string" }
-          - { label: "Subtext", name: "subtext", widget: "string" }
-          - { label: "Photo", name: "image", widget: "image" }
-
-      - name: "malcolm"
-        label: "Malcolm Photo"
-        file: "src/_data/malcolm.json"
-        fields:
-          - { label: "Photo", name: "image", widget: "image" }
-          - { label: "Alt Text", name: "alt", widget: "string" }
+          - { label: "Instagram URL", name: "instagram_url", widget: "string", required: false }
+          - { label: "Email", name: "email", widget: "string", required: false }

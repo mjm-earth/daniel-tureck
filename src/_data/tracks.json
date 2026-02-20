@@ -1,38 +1,6 @@
 {
-  "image": "/assets/images/picks/detail-9573.jpg",
-  "ab_tracks": [
-    {
-      "artist": "Artist Name",
-      "title": "Track Title",
-      "genre": "R&B",
-      "before_audio": "/assets/audio/track1-before.mp3",
-      "after_audio": "/assets/audio/track1-after.mp3"
-    },
-    {
-      "artist": "Artist Name",
-      "title": "Track Title",
-      "genre": "Hip-Hop",
-      "before_audio": "/assets/audio/track2-before.mp3",
-      "after_audio": "/assets/audio/track2-after.mp3"
-    },
-    {
-      "artist": "Artist Name",
-      "title": "Track Title",
-      "genre": "Soul",
-      "before_audio": "/assets/audio/track3-before.mp3",
-      "after_audio": "/assets/audio/track3-after.mp3"
-    }
-  ],
-  "selected_work": [
-    { "artist": "James Vickery", "title": "Track Title", "genre": "R&B", "audio_src": "/assets/audio/placeholder.mp3" },
-    { "artist": "BJ The Chicago Kid", "title": "Track Title", "genre": "R&B", "audio_src": "/assets/audio/placeholder.mp3" },
-    { "artist": "Justine Skye", "title": "Track Title", "genre": "Pop", "audio_src": "/assets/audio/placeholder.mp3" },
-    { "artist": "K. Roosevelt", "title": "Track Title", "genre": "R&B", "audio_src": "/assets/audio/placeholder.mp3" },
-    { "artist": "Arin Ray", "title": "Track Title", "genre": "R&B", "audio_src": "/assets/audio/placeholder.mp3" },
-    { "artist": "Marco McKinnis", "title": "Track Title", "genre": "Soul", "audio_src": "/assets/audio/placeholder.mp3" },
-    { "artist": "Cameo Adele", "title": "Track Title", "genre": "R&B", "audio_src": "/assets/audio/placeholder.mp3" },
-    { "artist": "Blcknoise", "title": "Track Title", "genre": "Hip-Hop", "audio_src": "/assets/audio/placeholder.mp3" },
-    { "artist": "Peter $un", "title": "Track Title", "genre": "Hip-Hop", "audio_src": "/assets/audio/placeholder.mp3" }
-  ],
-  "credits_link": "https://muso.ai"
+  "artists": "James Vickery · BJ the Chicago Kid · Justine Skye · K. Roosevelt · Arin Ray · Marco McKinnis · Cameo Adele · Blcknoise · Peter $un",
+  "player_embed": "",
+  "credits_link": "https://credits.muso.ai/profile/6c783268-08ce-4d31-af1e-f8a91f968744",
+  "credits_text": "Full credits"
 }

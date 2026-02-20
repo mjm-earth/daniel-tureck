@@ -1,0 +1,10 @@
+{
+  "grid": [
+    { "image": "/assets/images/picks/detail-9573.jpg", "alt": "Studio detail" },
+    { "image": "/assets/images/picks/work-9595.jpg", "alt": "Daniel working" }
+  ],
+  "wide": {
+    "image": "/assets/images/picks/hero-9814.jpg",
+    "alt": "Daniel Tureck at Robot Slap Studios"
+  }
+}

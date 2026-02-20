@@ -9,7 +9,7 @@
   <!-- Open Graph -->
   <meta property="og:title" content="{{ site.title }}">
   <meta property="og:description" content="{{ site.description }}">
-  <meta property="og:image" content="{{ site.url }}{{ hero.image | url }}">
+  <meta property="og:image" content="{{ site.url }}{{ bio.photo | url }}">
   <meta property="og:url" content="{{ site.url }}/">
   <meta property="og:type" content="website">
 
@@ -17,13 +17,10 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="{{ site.title }}">
   <meta name="twitter:description" content="{{ site.description }}">
-  <meta name="twitter:image" content="{{ site.url }}{{ hero.image | url }}">
+  <meta name="twitter:image" content="{{ site.url }}{{ bio.photo | url }}">
 
   <!-- Canonical -->
   <link rel="canonical" href="{{ site.url }}/">
-
-  <!-- Preload hero image -->
-  <link rel="preload" href="{{ hero.image | url }}" as="image">
 
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -41,7 +38,7 @@
     "jobTitle": "{{ bio.headline }}",
     "description": "{{ site.description }}",
     "url": "{{ site.url }}/",
-    "image": "{{ site.url }}{{ bio.image | url }}",
+    "image": "{{ site.url }}{{ bio.photo | url }}",
     "workLocation": {
       "@type": "Place",
       "name": "{{ studio.name }}"
@@ -51,6 +48,5 @@
 </head>
 <body>
   {{ content | safe }}
-  <script src="{{ '/js/main.js' | url }}" defer></script>
 </body>
 </html>
