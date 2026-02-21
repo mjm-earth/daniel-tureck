@@ -1,10 +1,27 @@
 {
-  "about": {
-    "image": "/assets/images/picks/work-9595.jpg",
-    "alt": "Daniel Tureck working at Robot Slap Studios"
+  "section_1": {
+    "image": "/assets/images/picks/portrait-9406.jpg",
+    "alt": "Daniel Tureck at the console",
+    "crop": "50% 20%"
+  },
+  "section_2": {
+    "image": "/assets/images/picks/mjm-9563.jpg",
+    "alt": "Robot Slap Studios through the window",
+    "crop": "50% 50%"
+  },
+  "section_3": {
+    "image": "/assets/images/picks/mjm-9576.jpg",
+    "alt": "Daniel Tureck working at the console",
+    "crop": "30% 50%"
+  },
+  "section_4": {
+    "image": "/assets/images/picks/mjm-9605.jpg",
+    "alt": "Wide view of Robot Slap Studios",
+    "crop": "30% 50%"
   },
   "footer": {
     "image": "/assets/images/picks/malcolm-9923.jpg",
-    "alt": "Daniel Tureck with his son Malcolm"
+    "alt": "Daniel Tureck with his son Malcolm",
+    "crop": "30% 40%"
   }
 }

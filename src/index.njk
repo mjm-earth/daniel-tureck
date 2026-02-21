@@ -48,7 +48,7 @@ layout: base.njk
 
 <!-- Photo Break -->
 <div class="section-photo">
-  <img src="{{ '/assets/images/picks/portrait-9406.jpg' | url }}" alt="Daniel Tureck at the console" width="1920" height="1280" decoding="async" style="object-position: 50% 20%">
+  <img src="{{ photos.section_1.image | url }}" alt="{{ photos.section_1.alt }}" width="1920" height="1280" decoding="async" style="object-position: {{ photos.section_1.crop }}">
 </div>
 
 <!-- About -->
@@ -82,7 +82,7 @@ layout: base.njk
 
 <!-- Photo Break -->
 <div class="section-photo">
-  <img src="{{ '/assets/images/picks/mjm-9563.jpg' | url }}" alt="Robot Slap Studios through the window" width="1920" height="1280" loading="lazy" decoding="async"{% if imageCrops['/assets/images/picks/mjm-9563.jpg'] %} style="object-position: {{ imageCrops['/assets/images/picks/mjm-9563.jpg'] }}"{% endif %}>
+  <img src="{{ photos.section_2.image | url }}" alt="{{ photos.section_2.alt }}" width="1920" height="1280" loading="lazy" decoding="async" style="object-position: {{ photos.section_2.crop }}">
 </div>
 
 <!-- Work -->
@@ -171,7 +171,7 @@ layout: base.njk
 
 <!-- Photo Break -->
 <div class="section-photo">
-  <img src="{{ '/assets/images/picks/mjm-9576.jpg' | url }}" alt="Daniel Tureck working at the console" width="1920" height="1280" loading="lazy" decoding="async" style="object-position: 30% 50%">
+  <img src="{{ photos.section_3.image | url }}" alt="{{ photos.section_3.alt }}" width="1920" height="1280" loading="lazy" decoding="async" style="object-position: {{ photos.section_3.crop }}">
 </div>
 
 <!-- Studio -->
@@ -194,7 +194,7 @@ layout: base.njk
 
 <!-- Photo Break -->
 <div class="section-photo">
-  <img src="{{ '/assets/images/picks/mjm-9605.jpg' | url }}" alt="Wide view of Robot Slap Studios" width="1920" height="1280" loading="lazy" decoding="async" style="object-position: 30% 50%">
+  <img src="{{ photos.section_4.image | url }}" alt="{{ photos.section_4.alt }}" width="1920" height="1280" loading="lazy" decoding="async" style="object-position: {{ photos.section_4.crop }}">
 </div>
 
 <!-- Contact -->
@@ -294,7 +294,7 @@ layout: base.njk
 
 <!-- Footer Photo -->
 <section class="footer-photo">
-  <img src="{{ photos.footer.image | url }}" alt="{{ photos.footer.alt }}" width="1920" height="1280" loading="lazy" decoding="async" style="object-position: 30% 40%">
+  <img src="{{ photos.footer.image | url }}" alt="{{ photos.footer.alt }}" width="1920" height="1280" loading="lazy" decoding="async" style="object-position: {{ photos.footer.crop }}">
 </section>
 
 <!-- Footer -->

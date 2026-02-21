@@ -97,7 +97,7 @@ img {
 
 .nav__links {
   display: flex;
-  gap: 32px;
+  gap: 12px;
 }
 
 .nav .nav__link {
@@ -108,7 +108,7 @@ img {
   text-transform: none;
   text-decoration: none;
   color: #5E6B4A;
-  padding: 8px 20px;
+  padding: 8px 12px;
   border-radius: 100px;
   transition: color 0.2s ease, background-color 0.2s ease;
 }
@@ -140,6 +140,10 @@ img {
 
 .nav__link:hover {
   color: var(--orange);
+}
+
+.nav .nav__link:hover {
+  background-color: rgba(94, 107, 74, 0.1);
 }
 
 .nav__link--active {
@@ -260,7 +264,13 @@ img {
   letter-spacing: -0.02em;
   text-transform: none;
   color: #5E6B4A;
-  padding: 8px 20px;
+  padding: 8px 12px;
+  border-radius: 100px;
+  transition: background-color 0.2s ease;
+}
+
+.hero__nav .nav__link:hover {
+  background-color: rgba(94, 107, 74, 0.1);
 }
 
 /* =============================================

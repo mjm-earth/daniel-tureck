@@ -52,18 +52,41 @@ collections:
         label: "Photos"
         file: "src/_data/photos.json"
         fields:
-          - label: "About Photo"
-            name: "about"
+          - label: "Photo Break 1 (after Hero)"
+            name: "section_1"
             widget: "object"
             fields:
               - { label: "Image", name: "image", widget: "image" }
               - { label: "Alt Text", name: "alt", widget: "string" }
+              - { label: "Crop Position", name: "crop", widget: "string", default: "50% 50%", hint: "CSS object-position, e.g. 50% 20%" }
+          - label: "Photo Break 2 (after About)"
+            name: "section_2"
+            widget: "object"
+            fields:
+              - { label: "Image", name: "image", widget: "image" }
+              - { label: "Alt Text", name: "alt", widget: "string" }
+              - { label: "Crop Position", name: "crop", widget: "string", default: "50% 50%", hint: "CSS object-position, e.g. 50% 20%" }
+          - label: "Photo Break 3 (after Mixes)"
+            name: "section_3"
+            widget: "object"
+            fields:
+              - { label: "Image", name: "image", widget: "image" }
+              - { label: "Alt Text", name: "alt", widget: "string" }
+              - { label: "Crop Position", name: "crop", widget: "string", default: "50% 50%", hint: "CSS object-position, e.g. 30% 50%" }
+          - label: "Photo Break 4 (after Studio)"
+            name: "section_4"
+            widget: "object"
+            fields:
+              - { label: "Image", name: "image", widget: "image" }
+              - { label: "Alt Text", name: "alt", widget: "string" }
+              - { label: "Crop Position", name: "crop", widget: "string", default: "50% 50%", hint: "CSS object-position, e.g. 30% 50%" }
           - label: "Footer Photo"
             name: "footer"
             widget: "object"
             fields:
               - { label: "Image", name: "image", widget: "image" }
               - { label: "Alt Text", name: "alt", widget: "string" }
+              - { label: "Crop Position", name: "crop", widget: "string", default: "50% 50%", hint: "CSS object-position, e.g. 30% 40%" }
 
       - name: "studio"
         label: "Studio"
