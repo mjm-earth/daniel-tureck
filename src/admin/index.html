@@ -1,11 +1,1352 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Content Manager</title>
+  <title>Admin — danismixing.com</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #F5F0E8;
+      color: #1A1A1A;
+      min-height: 100vh;
+    }
+
+    /* Auth Screen */
+    #auth-screen {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 24px;
+    }
+
+    .auth-box {
+      background: #fff;
+      border-radius: 12px;
+      padding: 48px 40px;
+      max-width: 440px;
+      width: 100%;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+    }
+
+    .auth-box h1 {
+      font-size: 22px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .auth-box p {
+      font-size: 14px;
+      color: #666;
+      margin-bottom: 24px;
+      line-height: 1.5;
+    }
+
+    .auth-box label {
+      display: block;
+      font-size: 13px;
+      font-weight: 500;
+      margin-bottom: 6px;
+      color: #444;
+    }
+
+    .auth-box input[type="password"] {
+      width: 100%;
+      padding: 10px 14px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      font-size: 14px;
+      margin-bottom: 16px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .auth-box input[type="password"]:focus {
+      border-color: #5E6B4A;
+    }
+
+    .auth-box .auth-error {
+      color: #c0392b;
+      font-size: 13px;
+      margin-bottom: 12px;
+      display: none;
+    }
+
+    .auth-box a {
+      color: #5E6B4A;
+    }
+
+    /* Buttons */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: opacity 0.2s, background-color 0.2s;
+    }
+
+    .btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .btn-primary {
+      background: #5E6B4A;
+      color: #fff;
+    }
+
+    .btn-primary:hover:not(:disabled) {
+      background: #4d5a3b;
+    }
+
+    .btn-danger {
+      background: none;
+      color: #c0392b;
+      padding: 6px 12px;
+      font-size: 13px;
+    }
+
+    .btn-danger:hover:not(:disabled) {
+      background: rgba(192, 57, 43, 0.08);
+    }
+
+    .btn-secondary {
+      background: #eee;
+      color: #333;
+    }
+
+    .btn-secondary:hover:not(:disabled) {
+      background: #ddd;
+    }
+
+    /* App Layout */
+    #app { display: none; }
+
+    .app-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 24px;
+      background: #fff;
+      border-bottom: 1px solid #e0ddd6;
+    }
+
+    .app-header h1 {
+      font-size: 16px;
+      font-weight: 600;
+    }
+
+    .app-header .btn-logout {
+      background: none;
+      border: none;
+      color: #888;
+      font-size: 13px;
+      cursor: pointer;
+    }
+
+    .app-header .btn-logout:hover {
+      color: #333;
+    }
+
+    /* Tabs */
+    .tabs {
+      display: flex;
+      gap: 0;
+      background: #fff;
+      border-bottom: 1px solid #e0ddd6;
+      padding: 0 24px;
+    }
+
+    .tab-btn {
+      padding: 12px 20px;
+      border: none;
+      background: none;
+      font-size: 14px;
+      font-weight: 500;
+      color: #888;
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      transition: color 0.2s, border-color 0.2s;
+    }
+
+    .tab-btn:hover {
+      color: #555;
+    }
+
+    .tab-btn.active {
+      color: #5E6B4A;
+      border-bottom-color: #5E6B4A;
+    }
+
+    /* Tab Content */
+    .tab-content {
+      display: none;
+      padding: 24px;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    /* Photo Cards */
+    .photo-card {
+      background: #fff;
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 20px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+    }
+
+    .photo-card h3 {
+      font-size: 15px;
+      font-weight: 600;
+      margin-bottom: 16px;
+      color: #444;
+    }
+
+    .photo-preview {
+      width: 100%;
+      height: 200px;
+      overflow: hidden;
+      border-radius: 8px;
+      background: #eee;
+      margin-bottom: 16px;
+    }
+
+    .photo-preview img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .crop-controls {
+      display: flex;
+      gap: 24px;
+      margin-bottom: 16px;
+    }
+
+    .crop-controls label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      color: #555;
+      flex: 1;
+    }
+
+    .crop-controls input[type="range"] {
+      flex: 1;
+      accent-color: #5E6B4A;
+    }
+
+    .crop-controls .crop-val {
+      font-size: 12px;
+      color: #888;
+      min-width: 32px;
+      text-align: right;
+    }
+
+    .field-row {
+      margin-bottom: 12px;
+    }
+
+    .field-row label {
+      display: block;
+      font-size: 13px;
+      font-weight: 500;
+      color: #555;
+      margin-bottom: 4px;
+    }
+
+    .field-row input[type="text"],
+    .field-row select {
+      width: 100%;
+      padding: 8px 12px;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      font-size: 14px;
+      outline: none;
+    }
+
+    .field-row input[type="text"]:focus,
+    .field-row select:focus {
+      border-color: #5E6B4A;
+    }
+
+    .photo-actions {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      margin-top: 16px;
+    }
+
+    .photo-actions .unsaved-badge {
+      font-size: 12px;
+      color: #e67e22;
+      font-weight: 500;
+      display: none;
+    }
+
+    .photo-actions .unsaved-badge.visible {
+      display: inline;
+    }
+
+    /* Audio Forms */
+    .form-card {
+      background: #fff;
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 24px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+    }
+
+    .form-card h3 {
+      font-size: 15px;
+      font-weight: 600;
+      margin-bottom: 20px;
+      color: #444;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .form-row.full {
+      grid-template-columns: 1fr;
+    }
+
+    .form-field label {
+      display: block;
+      font-size: 13px;
+      font-weight: 500;
+      color: #555;
+      margin-bottom: 4px;
+    }
+
+    .form-field input[type="text"],
+    .form-field select {
+      width: 100%;
+      padding: 8px 12px;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      font-size: 14px;
+      outline: none;
+    }
+
+    .form-field input[type="text"]:focus,
+    .form-field select:focus {
+      border-color: #5E6B4A;
+    }
+
+    .radio-group {
+      display: flex;
+      gap: 16px;
+      padding-top: 4px;
+    }
+
+    .radio-group label {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 14px;
+      font-weight: 400;
+      color: #333;
+      cursor: pointer;
+    }
+
+    .radio-group input[type="radio"] {
+      accent-color: #5E6B4A;
+    }
+
+    .checkbox-group {
+      padding-top: 4px;
+    }
+
+    .checkbox-group label {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 14px;
+      font-weight: 400;
+      color: #333;
+      cursor: pointer;
+    }
+
+    .checkbox-group input[type="checkbox"] {
+      accent-color: #5E6B4A;
+    }
+
+    .file-field {
+      margin-bottom: 12px;
+    }
+
+    .file-field label {
+      display: block;
+      font-size: 13px;
+      font-weight: 500;
+      color: #555;
+      margin-bottom: 4px;
+    }
+
+    .file-drop {
+      border: 2px dashed #ddd;
+      border-radius: 8px;
+      padding: 20px;
+      text-align: center;
+      cursor: pointer;
+      transition: border-color 0.2s, background 0.2s;
+      font-size: 13px;
+      color: #888;
+    }
+
+    .file-drop:hover {
+      border-color: #5E6B4A;
+      background: rgba(94, 107, 74, 0.03);
+    }
+
+    .file-drop.has-file {
+      border-color: #5E6B4A;
+      color: #5E6B4A;
+      background: rgba(94, 107, 74, 0.05);
+    }
+
+    .file-drop input[type="file"] {
+      display: none;
+    }
+
+    /* Track List */
+    .track-list {
+      background: #fff;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+    }
+
+    .track-list h3 {
+      font-size: 15px;
+      font-weight: 600;
+      padding: 20px 24px 0;
+      color: #444;
+    }
+
+    .track-list-count {
+      font-weight: 400;
+      color: #999;
+    }
+
+    .track-item {
+      display: flex;
+      align-items: center;
+      padding: 12px 24px;
+      border-top: 1px solid #f0ede6;
+      gap: 12px;
+    }
+
+    .track-item:first-of-type {
+      border-top: none;
+      margin-top: 12px;
+    }
+
+    .track-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .track-title {
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    .track-meta {
+      font-size: 12px;
+      color: #888;
+      margin-top: 2px;
+    }
+
+    .track-badge {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 500;
+      background: rgba(94, 107, 74, 0.1);
+      color: #5E6B4A;
+    }
+
+    .track-badge.featured {
+      background: rgba(230, 126, 34, 0.1);
+      color: #e67e22;
+    }
+
+    .track-badge.live {
+      background: rgba(52, 152, 219, 0.1);
+      color: #2980b9;
+    }
+
+    /* Status Bar */
+    #status-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 12px 24px;
+      font-size: 13px;
+      font-weight: 500;
+      transform: translateY(100%);
+      transition: transform 0.3s ease;
+      z-index: 100;
+    }
+
+    #status-bar.visible {
+      transform: translateY(0);
+    }
+
+    #status-bar.success {
+      background: #27ae60;
+      color: #fff;
+    }
+
+    #status-bar.error {
+      background: #c0392b;
+      color: #fff;
+    }
+
+    #status-bar.loading {
+      background: #5E6B4A;
+      color: #fff;
+    }
+
+    /* Loading spinner */
+    .spinner {
+      display: inline-block;
+      width: 14px;
+      height: 14px;
+      border: 2px solid rgba(255,255,255,0.3);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin 0.6s linear infinite;
+      vertical-align: middle;
+      margin-right: 6px;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .empty-state {
+      text-align: center;
+      padding: 40px 24px;
+      color: #999;
+      font-size: 14px;
+    }
+
+    /* Confirm dialog */
+    .confirm-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 200;
+    }
+
+    .confirm-box {
+      background: #fff;
+      border-radius: 12px;
+      padding: 28px;
+      max-width: 400px;
+      width: 90%;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.15);
+    }
+
+    .confirm-box p {
+      font-size: 14px;
+      line-height: 1.5;
+      margin-bottom: 20px;
+    }
+
+    .confirm-actions {
+      display: flex;
+      gap: 10px;
+      justify-content: flex-end;
+    }
+  </style>
 </head>
 <body>
-  <script src="https://unpkg.com/@sveltia/cms/dist/sveltia-cms.js"></script>
+
+  <!-- Auth Screen -->
+  <div id="auth-screen">
+    <div class="auth-box">
+      <h1>danismixing.com</h1>
+      <p>Sign in with a GitHub Personal Access Token to manage your site content.</p>
+      <label for="token-input">Personal Access Token</label>
+      <input type="password" id="token-input" placeholder="ghp_xxxxxxxxxxxx" autocomplete="off">
+      <div class="auth-error" id="auth-error"></div>
+      <button class="btn btn-primary" id="login-btn" style="width:100%">Sign In</button>
+      <p style="margin-top:16px;font-size:12px;color:#999">
+        Create a token at <a href="https://github.com/settings/tokens?type=beta" target="_blank">GitHub Settings</a> with <strong>Contents</strong> read/write access to the <code>mjm-earth/daniel-tureck</code> repo.
+      </p>
+    </div>
+  </div>
+
+  <!-- Main App -->
+  <div id="app">
+    <header class="app-header">
+      <h1>danismixing.com</h1>
+      <button class="btn-logout" id="logout-btn">Sign Out</button>
+    </header>
+
+    <nav class="tabs">
+      <button class="tab-btn active" data-tab="photos">Photos</button>
+      <button class="tab-btn" data-tab="showcase">Showcase</button>
+      <button class="tab-btn" data-tab="before-after">Before / After</button>
+    </nav>
+
+    <div id="tab-photos" class="tab-content active"></div>
+    <div id="tab-showcase" class="tab-content"></div>
+    <div id="tab-before-after" class="tab-content"></div>
+  </div>
+
+  <div id="status-bar"></div>
+
+  <script>
+    // === CONFIG ===
+    const OWNER = 'mjm-earth';
+    const REPO = 'daniel-tureck';
+    const BRANCH = 'main';
+    const API = 'https://api.github.com';
+
+    const SECTION_LABELS = {
+      section_1: 'Photo Break 1 (after Hero)',
+      section_2: 'Photo Break 2 (after About)',
+      section_3: 'Photo Break 3 (after Mixes)',
+      section_4: 'Photo Break 4 (after Studio)',
+      footer: 'Footer Photo'
+    };
+
+    const SUBGENRES = ['R&B', 'Hip-Hop', 'Live'];
+
+    // === STATE ===
+    let photosData = null;
+    let audioData = null;
+    let dataLoaded = { photos: false, audio: false };
+
+    // === GITHUB API ===
+    function getToken() {
+      return localStorage.getItem('gh_token');
+    }
+
+    async function ghFetch(path, options = {}) {
+      const token = getToken();
+      const res = await fetch(`${API}${path}`, {
+        ...options,
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Accept': 'application/vnd.github.v3+json',
+          'Content-Type': 'application/json',
+          ...(options.headers || {}),
+        }
+      });
+      if (res.status === 401) {
+        localStorage.removeItem('gh_token');
+        showAuth();
+        throw new Error('Token expired or invalid.');
+      }
+      if (!res.ok) {
+        const text = await res.text();
+        throw new Error(`GitHub API ${res.status}: ${text}`);
+      }
+      return res.json();
+    }
+
+    async function getJSON(repoPath) {
+      const data = await ghFetch(`/repos/${OWNER}/${REPO}/contents/${repoPath}?ref=${BRANCH}`);
+      const content = decodeBase64(data.content);
+      return { data: JSON.parse(content), sha: data.sha };
+    }
+
+    function decodeBase64(encoded) {
+      const binary = atob(encoded.replace(/\n/g, ''));
+      const bytes = new Uint8Array(binary.length);
+      for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+      return new TextDecoder().decode(bytes);
+    }
+
+    async function batchCommit(files, message) {
+      // files: [{ path, content, encoding: 'base64' | 'utf-8' }]
+      // For deletions: { path, deleted: true }
+
+      const blobs = await Promise.all(files.filter(f => !f.deleted).map(async (f) => {
+        const blob = await ghFetch(`/repos/${OWNER}/${REPO}/git/blobs`, {
+          method: 'POST',
+          body: JSON.stringify({ content: f.content, encoding: f.encoding || 'utf-8' })
+        });
+        return { path: f.path, sha: blob.sha, mode: '100644', type: 'blob' };
+      }));
+
+      // Add deletions (sha: null removes the file)
+      const deletions = files.filter(f => f.deleted).map(f => ({
+        path: f.path, sha: null, mode: '100644', type: 'blob'
+      }));
+
+      const treeEntries = [...blobs, ...deletions];
+
+      const ref = await ghFetch(`/repos/${OWNER}/${REPO}/git/ref/heads/${BRANCH}`);
+      const currentSha = ref.object.sha;
+      const currentCommit = await ghFetch(`/repos/${OWNER}/${REPO}/git/commits/${currentSha}`);
+
+      const newTree = await ghFetch(`/repos/${OWNER}/${REPO}/git/trees`, {
+        method: 'POST',
+        body: JSON.stringify({ base_tree: currentCommit.tree.sha, tree: treeEntries })
+      });
+
+      const newCommit = await ghFetch(`/repos/${OWNER}/${REPO}/git/commits`, {
+        method: 'POST',
+        body: JSON.stringify({ message, tree: newTree.sha, parents: [currentSha] })
+      });
+
+      await ghFetch(`/repos/${OWNER}/${REPO}/git/refs/heads/${BRANCH}`, {
+        method: 'PATCH',
+        body: JSON.stringify({ sha: newCommit.sha })
+      });
+
+      return newCommit.sha;
+    }
+
+    // === UTILITIES ===
+    function slugify(str) {
+      return str.toLowerCase().replace(/['']/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+    }
+
+    function fileToBase64(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result.split(',')[1]);
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+      });
+    }
+
+    function rawUrl(repoPath) {
+      return `https://raw.githubusercontent.com/${OWNER}/${REPO}/${BRANCH}/${repoPath}`;
+    }
+
+    function repoPathFromUrl(assetUrl) {
+      // Convert /assets/images/picks/foo.jpg -> src/assets/images/picks/foo.jpg
+      return 'src' + assetUrl;
+    }
+
+    let statusTimer = null;
+    function showStatus(message, type = 'success') {
+      const bar = document.getElementById('status-bar');
+      bar.textContent = message;
+      bar.className = `visible ${type}`;
+      clearTimeout(statusTimer);
+      if (type !== 'loading') {
+        statusTimer = setTimeout(() => { bar.className = ''; }, type === 'error' ? 8000 : 5000);
+      }
+    }
+
+    function hideStatus() {
+      document.getElementById('status-bar').className = '';
+    }
+
+    function confirm(message) {
+      return new Promise(resolve => {
+        const overlay = document.createElement('div');
+        overlay.className = 'confirm-overlay';
+        overlay.innerHTML = `
+          <div class="confirm-box">
+            <p>${message}</p>
+            <div class="confirm-actions">
+              <button class="btn btn-secondary" data-action="cancel">Cancel</button>
+              <button class="btn btn-primary" data-action="confirm">Confirm</button>
+            </div>
+          </div>
+        `;
+        overlay.querySelector('[data-action="cancel"]').onclick = () => { overlay.remove(); resolve(false); };
+        overlay.querySelector('[data-action="confirm"]').onclick = () => { overlay.remove(); resolve(true); };
+        document.body.appendChild(overlay);
+      });
+    }
+
+    // === AUTH ===
+    function showAuth() {
+      document.getElementById('auth-screen').style.display = 'flex';
+      document.getElementById('app').style.display = 'none';
+    }
+
+    function showApp() {
+      document.getElementById('auth-screen').style.display = 'none';
+      document.getElementById('app').style.display = 'block';
+    }
+
+    document.getElementById('login-btn').addEventListener('click', async () => {
+      const token = document.getElementById('token-input').value.trim();
+      if (!token) return;
+      const btn = document.getElementById('login-btn');
+      const errEl = document.getElementById('auth-error');
+      btn.disabled = true;
+      btn.textContent = 'Connecting...';
+      errEl.style.display = 'none';
+      try {
+        localStorage.setItem('gh_token', token);
+        await ghFetch(`/repos/${OWNER}/${REPO}`);
+        showApp();
+        loadTab('photos');
+      } catch (e) {
+        localStorage.removeItem('gh_token');
+        errEl.textContent = 'Invalid token or no access to this repository.';
+        errEl.style.display = 'block';
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Sign In';
+      }
+    });
+
+    document.getElementById('token-input').addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') document.getElementById('login-btn').click();
+    });
+
+    document.getElementById('logout-btn').addEventListener('click', () => {
+      localStorage.removeItem('gh_token');
+      showAuth();
+    });
+
+    // === TABS ===
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+        btn.classList.add('active');
+        const tab = btn.dataset.tab;
+        document.getElementById(`tab-${tab}`).classList.add('active');
+        loadTab(tab);
+      });
+    });
+
+    async function loadTab(tab) {
+      if (tab === 'photos') {
+        if (!dataLoaded.photos) {
+          document.getElementById('tab-photos').innerHTML = '<div class="empty-state"><span class="spinner" style="border-color:rgba(0,0,0,0.15);border-top-color:#5E6B4A"></span> Loading photos...</div>';
+          try {
+            const result = await getJSON('src/_data/photos.json');
+            photosData = result.data;
+            dataLoaded.photos = true;
+            renderPhotos();
+          } catch (e) {
+            document.getElementById('tab-photos').innerHTML = `<div class="empty-state" style="color:#c0392b">Failed to load photos: ${e.message}</div>`;
+          }
+        }
+      } else {
+        if (!dataLoaded.audio) {
+          const container = document.getElementById(`tab-${tab}`);
+          container.innerHTML = '<div class="empty-state"><span class="spinner" style="border-color:rgba(0,0,0,0.15);border-top-color:#5E6B4A"></span> Loading tracks...</div>';
+          try {
+            const result = await getJSON('src/_data/audio.json');
+            audioData = result.data;
+            dataLoaded.audio = true;
+            renderShowcase();
+            renderBeforeAfter();
+          } catch (e) {
+            container.innerHTML = `<div class="empty-state" style="color:#c0392b">Failed to load audio: ${e.message}</div>`;
+          }
+        }
+      }
+    }
+
+    // === PHOTOS TAB ===
+    function renderPhotos() {
+      const container = document.getElementById('tab-photos');
+      container.innerHTML = '';
+
+      for (const [key, label] of Object.entries(SECTION_LABELS)) {
+        const photo = photosData[key];
+        const [cx, cy] = (photo.crop || '50% 50%').replace(/%/g, '').split(/\s+/).map(Number);
+        const imgSrc = rawUrl('src' + photo.image);
+
+        const card = document.createElement('div');
+        card.className = 'photo-card';
+        card.innerHTML = `
+          <h3>${label}</h3>
+          <div class="photo-preview">
+            <img src="${imgSrc}" alt="${photo.alt}" style="object-position: ${cx}% ${cy}%">
+          </div>
+          <div class="crop-controls">
+            <label>Horizontal <input type="range" min="0" max="100" value="${cx}" data-axis="x"> <span class="crop-val">${cx}%</span></label>
+            <label>Vertical <input type="range" min="0" max="100" value="${cy}" data-axis="y"> <span class="crop-val">${cy}%</span></label>
+          </div>
+          <div class="field-row">
+            <label>Alt text</label>
+            <input type="text" value="${photo.alt}" class="alt-input">
+          </div>
+          <input type="file" accept="image/jpeg,image/png,image/webp" class="file-input" style="display:none">
+          <div class="photo-actions">
+            <button class="btn btn-secondary choose-btn">Choose New Photo</button>
+            <button class="btn btn-primary save-btn" disabled>Save Changes</button>
+            <span class="unsaved-badge">Unsaved changes</span>
+          </div>
+        `;
+
+        const img = card.querySelector('.photo-preview img');
+        const saveBtn = card.querySelector('.save-btn');
+        const badge = card.querySelector('.unsaved-badge');
+        let pendingFile = null;
+
+        function markDirty() {
+          saveBtn.disabled = false;
+          badge.classList.add('visible');
+        }
+
+        // Crop sliders
+        card.querySelectorAll('input[type="range"]').forEach(slider => {
+          slider.addEventListener('input', () => {
+            const x = card.querySelector('[data-axis="x"]').value;
+            const y = card.querySelector('[data-axis="y"]').value;
+            img.style.objectPosition = `${x}% ${y}%`;
+            card.querySelector('[data-axis="x"]').nextElementSibling.textContent = `${x}%`;
+            card.querySelector('[data-axis="y"]').nextElementSibling.textContent = `${y}%`;
+            markDirty();
+          });
+        });
+
+        // Alt text
+        card.querySelector('.alt-input').addEventListener('input', markDirty);
+
+        // File picker
+        const fileInput = card.querySelector('.file-input');
+        card.querySelector('.choose-btn').addEventListener('click', () => fileInput.click());
+        fileInput.addEventListener('change', () => {
+          const file = fileInput.files[0];
+          if (!file) return;
+          if (file.size > 50 * 1024 * 1024) {
+            showStatus('File too large. Maximum 50MB.', 'error');
+            return;
+          }
+          const reader = new FileReader();
+          reader.onload = () => {
+            img.src = reader.result;
+            pendingFile = { file, base64: reader.result.split(',')[1] };
+            markDirty();
+          };
+          reader.readAsDataURL(file);
+        });
+
+        // Save
+        saveBtn.addEventListener('click', async () => {
+          saveBtn.disabled = true;
+          saveBtn.textContent = 'Saving...';
+          showStatus('Uploading changes...', 'loading');
+
+          try {
+            const newAlt = card.querySelector('.alt-input').value;
+            const x = card.querySelector('[data-axis="x"]').value;
+            const y = card.querySelector('[data-axis="y"]').value;
+            const newCrop = `${x}% ${y}%`;
+
+            const files = [];
+            let imagePath = photo.image;
+
+            if (pendingFile) {
+              const ext = pendingFile.file.name.split('.').pop().toLowerCase();
+              const filename = key === 'footer' ? `footer.${ext}` : `${key.replace('_', '-')}.${ext}`;
+              imagePath = `/assets/images/picks/${filename}`;
+              files.push({
+                path: `src${imagePath}`,
+                content: pendingFile.base64,
+                encoding: 'base64'
+              });
+            }
+
+            // Update photos data
+            photosData[key] = { image: imagePath, alt: newAlt, crop: newCrop };
+            files.push({
+              path: 'src/_data/photos.json',
+              content: JSON.stringify(photosData, null, 2) + '\n',
+              encoding: 'utf-8'
+            });
+
+            const action = pendingFile ? 'photo' : 'crop/alt';
+            await batchCommit(files, `admin: update ${label.toLowerCase()} ${action}`);
+
+            photo.image = imagePath;
+            photo.alt = newAlt;
+            photo.crop = newCrop;
+            pendingFile = null;
+            badge.classList.remove('visible');
+            showStatus(`${label} updated. Site will rebuild in ~30 seconds.`);
+          } catch (e) {
+            showStatus(`Error: ${e.message}`, 'error');
+          } finally {
+            saveBtn.textContent = 'Save Changes';
+          }
+        });
+
+        container.appendChild(card);
+      }
+    }
+
+    // === SHOWCASE TAB ===
+    function renderShowcase() {
+      const container = document.getElementById('tab-showcase');
+      container.innerHTML = '';
+
+      // Add form
+      const form = document.createElement('div');
+      form.className = 'form-card';
+      form.innerHTML = `
+        <h3>Add Showcase Track</h3>
+        <div class="form-row">
+          <div class="form-field"><label>Artist</label><input type="text" id="sc-artist"></div>
+          <div class="form-field"><label>Title</label><input type="text" id="sc-title"></div>
+        </div>
+        <div class="form-row">
+          <div class="form-field">
+            <label>Subgenre</label>
+            <div class="radio-group">
+              ${SUBGENRES.map((g, i) => `<label><input type="radio" name="sc-subgenre" value="${g}" ${i === 0 ? 'checked' : ''}> ${g}</label>`).join('')}
+            </div>
+          </div>
+          <div class="form-field">
+            <label>Featured for</label>
+            <select id="sc-featured">
+              <option value="">None</option>
+              <option value="all">All</option>
+              ${SUBGENRES.map(g => `<option value="${g}">${g}</option>`).join('')}
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-field">
+            <label>Tag (optional)</label>
+            <select id="sc-tag">
+              <option value="">None</option>
+              <option value="live">live</option>
+            </select>
+          </div>
+        </div>
+        <div class="file-field">
+          <label>MP3 File</label>
+          <div class="file-drop" id="sc-file-drop">
+            Click to choose an MP3 file
+            <input type="file" accept="audio/mpeg,.mp3" id="sc-file">
+          </div>
+        </div>
+        <button class="btn btn-primary" id="sc-upload-btn">Upload Track</button>
+      `;
+      container.appendChild(form);
+
+      // File drop click
+      const fileDrop = form.querySelector('#sc-file-drop');
+      const fileInput = form.querySelector('#sc-file');
+      fileDrop.addEventListener('click', () => fileInput.click());
+      fileInput.addEventListener('change', () => {
+        if (fileInput.files[0]) {
+          fileDrop.textContent = fileInput.files[0].name;
+          fileDrop.classList.add('has-file');
+        }
+      });
+
+      // Upload handler
+      form.querySelector('#sc-upload-btn').addEventListener('click', async () => {
+        const artist = document.getElementById('sc-artist').value.trim();
+        const title = document.getElementById('sc-title').value.trim();
+        const subgenre = document.querySelector('input[name="sc-subgenre"]:checked').value;
+        const featured = document.getElementById('sc-featured').value;
+        const tag = document.getElementById('sc-tag').value;
+        const file = document.getElementById('sc-file').files[0];
+
+        if (!artist || !title) { showStatus('Artist and title are required.', 'error'); return; }
+        if (!file) { showStatus('Please select an MP3 file.', 'error'); return; }
+        if (file.size > 50 * 1024 * 1024) { showStatus('File too large. Maximum 50MB.', 'error'); return; }
+
+        const slug = `${slugify(artist)}-${slugify(title)}`;
+        const audioPath = `/assets/audio/showcase/${slug}.mp3`;
+
+        const ok = await confirm(`Upload <strong>"${title}"</strong> by <strong>${artist}</strong> as<br><code>showcase/${slug}.mp3</code>?`);
+        if (!ok) return;
+
+        const btn = document.getElementById('sc-upload-btn');
+        btn.disabled = true;
+        btn.textContent = 'Uploading...';
+        showStatus('Uploading track...', 'loading');
+
+        try {
+          const base64 = await fileToBase64(file);
+          const entry = { artist, title, subgenre };
+          if (tag) entry.tag = tag;
+          if (featured) entry.featured = featured;
+          entry.url = audioPath;
+
+          audioData.showcase.push(entry);
+
+          await batchCommit([
+            { path: `src${audioPath}`, content: base64, encoding: 'base64' },
+            { path: 'src/_data/audio.json', content: JSON.stringify(audioData, null, 2) + '\n', encoding: 'utf-8' }
+          ], `admin: add showcase track "${title}" by ${artist}`);
+
+          showStatus(`"${title}" by ${artist} uploaded. Site will rebuild in ~30 seconds.`);
+          renderShowcase();
+        } catch (e) {
+          // Remove the entry we optimistically added
+          audioData.showcase.pop();
+          showStatus(`Error: ${e.message}`, 'error');
+        } finally {
+          btn.disabled = false;
+          btn.textContent = 'Upload Track';
+        }
+      });
+
+      // Track list
+      const list = document.createElement('div');
+      list.className = 'track-list';
+      list.innerHTML = `<h3>Showcase Tracks <span class="track-list-count">(${audioData.showcase.length})</span></h3>`;
+
+      audioData.showcase.forEach((track, index) => {
+        const item = document.createElement('div');
+        item.className = 'track-item';
+        const badges = [];
+        if (track.featured) badges.push(`<span class="track-badge featured">${track.featured}</span>`);
+        if (track.tag) badges.push(`<span class="track-badge live">${track.tag}</span>`);
+        item.innerHTML = `
+          <div class="track-info">
+            <div class="track-title">${track.artist} — ${track.title}</div>
+            <div class="track-meta">${track.subgenre} ${badges.join(' ')}</div>
+          </div>
+          <button class="btn btn-danger" data-index="${index}">Remove</button>
+        `;
+        item.querySelector('.btn-danger').addEventListener('click', () => deleteShowcase(index));
+        list.appendChild(item);
+      });
+
+      container.appendChild(list);
+    }
+
+    async function deleteShowcase(index) {
+      const track = audioData.showcase[index];
+      const ok = await confirm(`Remove <strong>"${track.title}"</strong> by <strong>${track.artist}</strong>?<br>This will delete the audio file from the repository.`);
+      if (!ok) return;
+
+      showStatus('Removing track...', 'loading');
+      try {
+        const removed = audioData.showcase.splice(index, 1)[0];
+        const files = [
+          { path: 'src/_data/audio.json', content: JSON.stringify(audioData, null, 2) + '\n', encoding: 'utf-8' }
+        ];
+        // Delete the audio file too
+        if (removed.url) {
+          files.push({ path: `src${removed.url}`, deleted: true });
+        }
+        await batchCommit(files, `admin: remove showcase track "${removed.title}" by ${removed.artist}`);
+        showStatus(`"${removed.title}" removed. Site will rebuild in ~30 seconds.`);
+        renderShowcase();
+      } catch (e) {
+        showStatus(`Error: ${e.message}`, 'error');
+        // Reload data since state might be inconsistent
+        dataLoaded.audio = false;
+        loadTab('showcase');
+      }
+    }
+
+    // === BEFORE/AFTER TAB ===
+    function renderBeforeAfter() {
+      const container = document.getElementById('tab-before-after');
+      container.innerHTML = '';
+
+      // Add form
+      const form = document.createElement('div');
+      form.className = 'form-card';
+      form.innerHTML = `
+        <h3>Add Before / After Pair</h3>
+        <div class="form-row">
+          <div class="form-field"><label>Artist</label><input type="text" id="ba-artist"></div>
+          <div class="form-field"><label>Title</label><input type="text" id="ba-title"></div>
+        </div>
+        <div class="form-row">
+          <div class="form-field">
+            <label>Subgenre</label>
+            <div class="radio-group">
+              ${SUBGENRES.map((g, i) => `<label><input type="radio" name="ba-subgenre" value="${g}" ${i === 0 ? 'checked' : ''}> ${g}</label>`).join('')}
+            </div>
+          </div>
+          <div class="form-field">
+            <label>Featured for</label>
+            <select id="ba-featured">
+              <option value="">None</option>
+              <option value="all">All</option>
+              ${SUBGENRES.map(g => `<option value="${g}">${g}</option>`).join('')}
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-field">
+            <div class="checkbox-group">
+              <label><input type="checkbox" id="ba-live"> Live mix</label>
+            </div>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="file-field">
+            <label>Before MP3</label>
+            <div class="file-drop" id="ba-before-drop">
+              Click to choose the Before MP3
+              <input type="file" accept="audio/mpeg,.mp3" id="ba-before-file">
+            </div>
+          </div>
+          <div class="file-field">
+            <label>After MP3</label>
+            <div class="file-drop" id="ba-after-drop">
+              Click to choose the After MP3
+              <input type="file" accept="audio/mpeg,.mp3" id="ba-after-file">
+            </div>
+          </div>
+        </div>
+        <button class="btn btn-primary" id="ba-upload-btn">Upload Pair</button>
+      `;
+      container.appendChild(form);
+
+      // File drop clicks
+      ['before', 'after'].forEach(which => {
+        const drop = form.querySelector(`#ba-${which}-drop`);
+        const input = form.querySelector(`#ba-${which}-file`);
+        drop.addEventListener('click', () => input.click());
+        input.addEventListener('change', () => {
+          if (input.files[0]) {
+            drop.textContent = input.files[0].name;
+            drop.classList.add('has-file');
+          }
+        });
+      });
+
+      // Upload handler
+      form.querySelector('#ba-upload-btn').addEventListener('click', async () => {
+        const artist = document.getElementById('ba-artist').value.trim();
+        const title = document.getElementById('ba-title').value.trim();
+        const subgenre = document.querySelector('input[name="ba-subgenre"]:checked').value;
+        const featured = document.getElementById('ba-featured').value;
+        const isLive = document.getElementById('ba-live').checked;
+        const beforeFile = document.getElementById('ba-before-file').files[0];
+        const afterFile = document.getElementById('ba-after-file').files[0];
+
+        if (!artist || !title) { showStatus('Artist and title are required.', 'error'); return; }
+        if (!beforeFile || !afterFile) { showStatus('Both Before and After MP3 files are required.', 'error'); return; }
+        if (beforeFile.size > 50 * 1024 * 1024 || afterFile.size > 50 * 1024 * 1024) {
+          showStatus('Files too large. Maximum 50MB each.', 'error'); return;
+        }
+
+        const slug = `${slugify(artist)}-${slugify(title)}`;
+        const beforePath = `/assets/audio/before-after/${slug}-before.mp3`;
+        const afterPath = `/assets/audio/before-after/${slug}-after.mp3`;
+
+        const ok = await confirm(`Upload <strong>"${title}"</strong> by <strong>${artist}</strong>?<br><code>${slug}-before.mp3</code><br><code>${slug}-after.mp3</code>`);
+        if (!ok) return;
+
+        const btn = document.getElementById('ba-upload-btn');
+        btn.disabled = true;
+        btn.textContent = 'Uploading...';
+        showStatus('Uploading tracks...', 'loading');
+
+        try {
+          const [beforeB64, afterB64] = await Promise.all([fileToBase64(beforeFile), fileToBase64(afterFile)]);
+
+          const entry = { artist, title, subgenre };
+          if (isLive) entry.live = true;
+          if (featured) entry.featured = featured;
+          entry.before_url = beforePath;
+          entry.after_url = afterPath;
+
+          audioData.before_after.push(entry);
+
+          await batchCommit([
+            { path: `src${beforePath}`, content: beforeB64, encoding: 'base64' },
+            { path: `src${afterPath}`, content: afterB64, encoding: 'base64' },
+            { path: 'src/_data/audio.json', content: JSON.stringify(audioData, null, 2) + '\n', encoding: 'utf-8' }
+          ], `admin: add before/after track "${title}" by ${artist}`);
+
+          showStatus(`"${title}" by ${artist} uploaded. Site will rebuild in ~30 seconds.`);
+          renderBeforeAfter();
+        } catch (e) {
+          audioData.before_after.pop();
+          showStatus(`Error: ${e.message}`, 'error');
+        } finally {
+          btn.disabled = false;
+          btn.textContent = 'Upload Pair';
+        }
+      });
+
+      // Track list
+      const list = document.createElement('div');
+      list.className = 'track-list';
+      list.innerHTML = `<h3>Before / After Tracks <span class="track-list-count">(${audioData.before_after.length})</span></h3>`;
+
+      audioData.before_after.forEach((track, index) => {
+        const item = document.createElement('div');
+        item.className = 'track-item';
+        const badges = [];
+        if (track.featured) badges.push(`<span class="track-badge featured">${track.featured}</span>`);
+        if (track.live) badges.push(`<span class="track-badge live">live</span>`);
+        item.innerHTML = `
+          <div class="track-info">
+            <div class="track-title">${track.artist} — ${track.title}</div>
+            <div class="track-meta">${track.subgenre} ${badges.join(' ')}</div>
+          </div>
+          <button class="btn btn-danger" data-index="${index}">Remove</button>
+        `;
+        item.querySelector('.btn-danger').addEventListener('click', () => deleteBeforeAfter(index));
+        list.appendChild(item);
+      });
+
+      container.appendChild(list);
+    }
+
+    async function deleteBeforeAfter(index) {
+      const track = audioData.before_after[index];
+      const ok = await confirm(`Remove <strong>"${track.title}"</strong> by <strong>${track.artist}</strong>?<br>This will delete both audio files from the repository.`);
+      if (!ok) return;
+
+      showStatus('Removing track...', 'loading');
+      try {
+        const removed = audioData.before_after.splice(index, 1)[0];
+        const files = [
+          { path: 'src/_data/audio.json', content: JSON.stringify(audioData, null, 2) + '\n', encoding: 'utf-8' }
+        ];
+        if (removed.before_url) files.push({ path: `src${removed.before_url}`, deleted: true });
+        if (removed.after_url) files.push({ path: `src${removed.after_url}`, deleted: true });
+
+        await batchCommit(files, `admin: remove before/after track "${removed.title}" by ${removed.artist}`);
+        showStatus(`"${removed.title}" removed. Site will rebuild in ~30 seconds.`);
+        renderBeforeAfter();
+      } catch (e) {
+        showStatus(`Error: ${e.message}`, 'error');
+        dataLoaded.audio = false;
+        loadTab('before-after');
+      }
+    }
+
+    // === INIT ===
+    if (getToken()) {
+      // Validate token on load
+      ghFetch(`/repos/${OWNER}/${REPO}`).then(() => {
+        showApp();
+        loadTab('photos');
+      }).catch(() => {
+        localStorage.removeItem('gh_token');
+        showAuth();
+      });
+    }
+  </script>
 </body>
 </html>
