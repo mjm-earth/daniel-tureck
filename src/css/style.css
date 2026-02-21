@@ -676,12 +676,12 @@ img {
   transition: background-color 0.2s ease, color 0.2s ease;
 }
 
-.ab-toggle--after {
+.ab-toggle--before {
   border-radius: 6px 0 0 6px;
   border-right: none;
 }
 
-.ab-toggle--before {
+.ab-toggle--after {
   border-radius: 0 6px 6px 0;
 }
 
