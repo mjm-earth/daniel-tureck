@@ -115,6 +115,14 @@
         "testtest",
         "test"
       ]
+    },
+    {
+      "name": "test2",
+      "projects": [
+        "test",
+        "twrsfv",
+        "safgasf"
+      ]
     }
   ]
 }
