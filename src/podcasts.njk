@@ -4,6 +4,31 @@ pageTitle: "Podcast & Brand Audio | Daniel Tureck - Mix Engineer, Editor, Sound 
 pageDescription: "Daniel Tureck is a podcast mix engineer, editor and sound designer based in Long Beach, CA. Clients include Audible, Disney, Hulu, Vox Media, MSNBC, iHeart Media, Spotify and more."
 ---
 
+<!-- Structured Data: ProfessionalService -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "ProfessionalService",
+  "name": "{{ bio.name }} — Podcast & Brand Audio",
+  "provider": {
+    "@type": "Person",
+    "name": "{{ bio.name }}",
+    "url": "{{ site.url }}/"
+  },
+  "url": "{{ site.url }}/podcasts/",
+  "description": "{{ podcasts_page.description }}",
+  "areaServed": "Worldwide",
+  "serviceType": [{% for service in podcasts_page.services %}"{{ service.name }}"{% if not loop.last %}, {% endif %}{% endfor %}],
+  "brand": [{% for item in brands.items %}"{{ item.name }}"{% if not loop.last %}, {% endif %}{% endfor %}],
+  "address": {
+    "@type": "PostalAddress",
+    "addressLocality": "Long Beach",
+    "addressRegion": "CA",
+    "addressCountry": "US"
+  }
+}
+</script>
+
 <!-- Page Hero -->
 <section class="page-hero">
   <div class="page-hero__content">
@@ -18,7 +43,7 @@ pageDescription: "Daniel Tureck is a podcast mix engineer, editor and sound desi
     <div class="page-intro__grid">
       <p class="page-intro__text">{{ podcasts_page.intro }}</p>
       <div class="page-intro__photo">
-        <img src="{{ '/assets/images/picks/contact-9539.jpg' | url }}" alt="Daniel Tureck" width="800" height="1200" decoding="async" loading="lazy">
+        <img src="{{ '/assets/images/picks/contact-9539.jpg' | url }}" alt="Daniel Tureck — podcast mix engineer at Robot Slap Studios" width="800" height="1200" decoding="async" loading="lazy">
       </div>
     </div>
   </div>
@@ -27,7 +52,7 @@ pageDescription: "Daniel Tureck is a podcast mix engineer, editor and sound desi
 <!-- Services -->
 <section class="services">
   <div class="container">
-    <p class="section-label">Services</p>
+    <h2 class="section-label">Services</h2>
     <div class="services__grid">
       {% for service in podcasts_page.services %}
       <div class="services__item">
@@ -57,7 +82,7 @@ pageDescription: "Daniel Tureck is a podcast mix engineer, editor and sound desi
 <!-- Clients -->
 <section class="brands">
   <div class="container">
-    <p class="section-label">Clients</p>
+    <h2 class="section-label">Clients</h2>
     <div class="brands__grid">
       {% for item in brands.items %}
       <div class="brands__item">

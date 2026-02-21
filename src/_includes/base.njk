@@ -69,6 +69,18 @@
     "knowsAbout": ["Audio Mixing", "Music Production", "R&B", "Hip-Hop", "Soul", "Pop", "Podcast Production"]
   }
   </script>
+  {% if page.url != '/' %}
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "{{ site.url }}/" },
+      { "@type": "ListItem", "position": 2, "name": "{{ pageTitle or site.title }}", "item": "{{ site.url }}{{ page.url }}" }
+    ]
+  }
+  </script>
+  {% endif %}
 </head>
 <body>
   {{ content | safe }}
