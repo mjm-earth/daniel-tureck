@@ -2,8 +2,6 @@ backend:
   name: github
   repo: mjm-earth/daniel-tureck
   branch: main
-  auth_type: pkce
-  app_id: Ov23li0HoUyvHlSqFN6R
 
 media_folder: "src/assets"
 public_folder: "/assets"
