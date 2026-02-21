@@ -46,29 +46,129 @@
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
-    "@type": "Person",
-    "name": "{{ bio.name }}",
-    "jobTitle": "{{ bio.headline }}",
-    "description": "{{ site.description }}",
-    "url": "{{ site.url }}/",
-    "image": "{{ site.url }}{{ bio.photo | url }}",
-    "sameAs": [
-      "{{ cta.instagram_url }}"
-    ],
-    "email": "{{ cta.email }}",
-    "workLocation": {
-      "@type": "Place",
-      "name": "{{ studio.name }}",
-      "address": {
-        "@type": "PostalAddress",
-        "addressLocality": "Long Beach",
-        "addressRegion": "CA",
-        "addressCountry": "US"
+    "@graph": [
+      {
+        "@type": "WebSite",
+        "@id": "{{ site.url }}/#website",
+        "name": "{{ bio.name }} — {{ bio.headline }}",
+        "url": "{{ site.url }}/",
+        "description": "{{ site.description }}",
+        "publisher": { "@id": "{{ site.url }}/#person" }
+      },
+      {
+        "@type": "Person",
+        "@id": "{{ site.url }}/#person",
+        "name": "{{ bio.name }}",
+        "alternateName": "Dan Tureck",
+        "jobTitle": "{{ bio.headline }}",
+        "description": "{{ site.description }}",
+        "url": "{{ site.url }}/",
+        "image": "{{ site.url }}{{ bio.photo | url }}",
+        "sameAs": [
+          "{{ cta.instagram_url }}",
+          "{{ tracks.credits_link }}"
+        ],
+        "email": "{{ cta.email }}",
+        "hasOccupation": {
+          "@type": "Occupation",
+          "name": "Mix Engineer",
+          "occupationalCategory": "27-4014.00",
+          "description": "Professional audio mix engineer specializing in music, podcasts, and branded audio",
+          "skills": "Audio Mixing, Music Production, Podcast Production, Sound Design, Mastering, Pro Tools, Analog Summing"
+        },
+        "makesOffer": [
+          {
+            "@type": "Offer",
+            "itemOffered": {
+              "@type": "Service",
+              "name": "Music Mixing",
+              "description": "Professional mixing for R&B, hip-hop, soul, pop, and live session recordings"
+            }
+          },
+          {
+            "@type": "Offer",
+            "itemOffered": {
+              "@type": "Service",
+              "name": "Podcast & Brand Audio",
+              "description": "Podcast mixing, editing, sound design, mastering, and commercial audio production"
+            }
+          }
+        ],
+        "brand": {
+          "@type": "Organization",
+          "name": "{{ studio.name }}",
+          "url": "{{ site.url }}/"
+        },
+        "workLocation": {
+          "@type": "Place",
+          "name": "{{ studio.name }}",
+          "address": {
+            "@type": "PostalAddress",
+            "addressLocality": "Long Beach",
+            "addressRegion": "CA",
+            "addressCountry": "US"
+          }
+        },
+        "knowsAbout": [
+          "Audio Mixing", "Music Production", "R&B Mixing", "Hip-Hop Mixing",
+          "Soul Music", "Pop Music", "Live Session Mixing", "Podcast Production",
+          "Sound Design", "Audio Mastering", "Pro Tools", "Analog Summing",
+          "Hybrid Mixing", "Commercial Audio", "Podcast Editing"
+        ]
       }
-    },
-    "knowsAbout": ["Audio Mixing", "Music Production", "R&B", "Hip-Hop", "Soul", "Pop", "Podcast Production"]
+    ]
   }
   </script>
+  {% if page.url == '/' %}
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Who is Daniel Tureck?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Daniel Tureck is a professional mix engineer based in Long Beach, California. He works out of Robot Slap Studios, specializing in R&B, hip-hop, soul, pop, and live session mixing. His credits include BJ the Chicago Kid, James Vickery, Justine Skye, Arin Ray, K. Roosevelt, King Fantastic, and many more. He also mixes podcasts and branded audio for Disney, Audible, Hulu, MSNBC, Spotify, and other major clients."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Where is Daniel Tureck's studio?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Daniel Tureck works out of Robot Slap Studios, a private hybrid studio in Long Beach, California. The studio features analog summing, carefully selected outboard gear, and calibrated monitoring to ensure mixes translate on any system."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What genres does Daniel Tureck mix?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Daniel Tureck specializes in R&B, hip-hop, soul, pop, and live session recordings. He also mixes podcasts, branded audio, and commercial content for major networks and platforms."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How do I hire Daniel Tureck for a mix?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "You can contact Daniel Tureck through the mix request form on danismixing.com or by emailing dan.tureck@gmail.com. The form allows you to share project details including artist name, number of songs, timeline, and a link to your files."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What artists has Daniel Tureck worked with?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Daniel Tureck's music credits include BJ the Chicago Kid, James Vickery, Justine Skye, Arin Ray, K. Roosevelt, King Fantastic, Daniel Kristoff, Bestie, Badi, Everett Gabriel, Morgan, Cardigan Deville, My Cousin's House, Blcknoise, 3BlackKids, Aye Mitch!, Cameo Adele, and Sterling Victorian. His podcast and brand clients include Disney, Audible, Hulu, Vox Media, MSNBC, iHeart Media, Spotify, the History Channel, Stephen Curry, Amy Poehler, the LA Times, and Red Bull Records."
+        }
+      }
+    ]
+  }
+  </script>
+  {% endif %}
   {% if page.url != '/' %}
   <script type="application/ld+json">
   {
@@ -83,7 +183,9 @@
   {% endif %}
 </head>
 <body>
+  <main>
   {{ content | safe }}
+  </main>
   <script src="{{ '/js/main.js' | url }}" defer></script>
 </body>
 </html>

@@ -583,6 +583,45 @@
       gap: 10px;
       justify-content: flex-end;
     }
+
+    /* Pending state badges */
+    .track-badge.new {
+      background: rgba(39, 174, 96, 0.1);
+      color: #27ae60;
+    }
+
+    .track-badge.removing {
+      background: rgba(192, 57, 43, 0.1);
+      color: #c0392b;
+    }
+
+    .track-item.pending-add {
+      background: rgba(39, 174, 96, 0.04);
+    }
+
+    .track-item.pending-delete {
+      opacity: 0.5;
+    }
+
+    .track-item.pending-delete .track-title {
+      text-decoration: line-through;
+    }
+
+    .track-item.pending-delete .btn-danger {
+      color: #888;
+    }
+
+    /* Save bar at bottom of tab */
+    .tab-save-bar {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 20px 24px;
+      margin-top: 20px;
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+    }
   </style>
 </head>
 <body>
@@ -651,6 +690,14 @@
     let brandsData = null;
     let podcastsPageData = null;
     let dataLoaded = { photos: false, audio: false, seo: false, clients: false };
+
+    // Pending changes (buffered until Save is clicked)
+    let pendingShowcaseAdds = [];   // [{ entry, base64 }]
+    let pendingShowcaseDeletes = new Set(); // indices into audioData.showcase
+    let pendingBAAdds = [];         // [{ entry, beforeB64, afterB64 }]
+    let pendingBADeletes = new Set();       // indices into audioData.before_after
+    let pendingClientAdds = [];     // [{ name, projects }]
+    let pendingClientDeletes = new Set();   // indices into brandsData.items
 
     // === GITHUB API ===
     function getToken() {
@@ -1040,6 +1087,10 @@
     }
 
     // === SHOWCASE TAB ===
+    function hasShowcaseChanges() {
+      return pendingShowcaseAdds.length > 0 || pendingShowcaseDeletes.size > 0;
+    }
+
     function renderShowcase() {
       const container = document.getElementById('tab-showcase');
       container.innerHTML = '';
@@ -1085,7 +1136,7 @@
             <input type="file" accept="audio/mpeg,.mp3" id="sc-file">
           </div>
         </div>
-        <button class="btn btn-primary" id="sc-upload-btn">Upload Track</button>
+        <button class="btn btn-primary" id="sc-upload-btn">Add Track</button>
       `;
       container.appendChild(form);
 
@@ -1100,7 +1151,7 @@
         }
       });
 
-      // Upload handler
+      // Add handler — buffer locally, don't commit
       form.querySelector('#sc-upload-btn').addEventListener('click', async () => {
         const artist = form.querySelector('#sc-artist').value.trim();
         const title = form.querySelector('#sc-title').value.trim();
@@ -1116,49 +1167,56 @@
         const slug = `${slugify(artist)}-${slugify(title)}`;
         const audioPath = `/assets/audio/showcase/${slug}.mp3`;
 
-        const ok = await confirm(`Upload <strong>"${title}"</strong> by <strong>${artist}</strong> as<br><code>showcase/${slug}.mp3</code>?`);
-        if (!ok) return;
+        const base64 = await fileToBase64(file);
+        const entry = { artist, title, subgenre };
+        if (tag) entry.tag = tag;
+        if (featured) entry.featured = featured;
+        entry.url = audioPath;
 
-        const btn = form.querySelector('#sc-upload-btn');
-        btn.disabled = true;
-        btn.textContent = 'Uploading...';
-        showStatus('Uploading track...', 'loading');
-
-        try {
-          const base64 = await fileToBase64(file);
-          const entry = { artist, title, subgenre };
-          if (tag) entry.tag = tag;
-          if (featured) entry.featured = featured;
-          entry.url = audioPath;
-
-          audioData.showcase.push(entry);
-
-          await batchCommit([
-            { path: `src${audioPath}`, content: base64, encoding: 'base64' },
-            { path: 'src/_data/audio.json', content: JSON.stringify(audioData, null, 2) + '\n', encoding: 'utf-8' }
-          ], `admin: add showcase track "${title}" by ${artist}`);
-
-          showStatus(`"${title}" by ${artist} uploaded. Site will rebuild in ~30 seconds.`);
-          renderShowcase();
-        } catch (e) {
-          // Remove the entry we optimistically added
-          audioData.showcase.pop();
-          showStatus(`Error: ${e.message}`, 'error');
-        } finally {
-          btn.disabled = false;
-          btn.textContent = 'Upload Track';
-        }
+        pendingShowcaseAdds.push({ entry, base64 });
+        showStatus(`"${title}" by ${artist} added. Click Save Changes to publish.`);
+        renderShowcase();
       });
 
       // Track list
       const list = document.createElement('div');
       list.className = 'track-list';
-      list.innerHTML = `<h3>Showcase Tracks <span class="track-list-count">(${audioData.showcase.length})</span></h3>`;
+      const totalCount = audioData.showcase.length + pendingShowcaseAdds.length - pendingShowcaseDeletes.size;
+      list.innerHTML = `<h3>Showcase Tracks <span class="track-list-count">(${totalCount})</span></h3>`;
 
+      // Existing tracks
       audioData.showcase.forEach((track, index) => {
+        const isDeleting = pendingShowcaseDeletes.has(index);
         const item = document.createElement('div');
-        item.className = 'track-item';
+        item.className = 'track-item' + (isDeleting ? ' pending-delete' : '');
         const badges = [];
+        if (track.featured) badges.push(`<span class="track-badge featured">${track.featured}</span>`);
+        if (track.tag) badges.push(`<span class="track-badge live">${track.tag}</span>`);
+        if (isDeleting) badges.push(`<span class="track-badge removing">removing</span>`);
+        item.innerHTML = `
+          <div class="track-info">
+            <div class="track-title">${track.artist} — ${track.title}</div>
+            <div class="track-meta">${track.subgenre} ${badges.join(' ')}</div>
+          </div>
+          <button class="btn btn-danger">${isDeleting ? 'Undo' : 'Remove'}</button>
+        `;
+        item.querySelector('.btn-danger').addEventListener('click', () => {
+          if (isDeleting) {
+            pendingShowcaseDeletes.delete(index);
+          } else {
+            pendingShowcaseDeletes.add(index);
+          }
+          renderShowcase();
+        });
+        list.appendChild(item);
+      });
+
+      // Pending adds
+      pendingShowcaseAdds.forEach((pending, pIndex) => {
+        const track = pending.entry;
+        const item = document.createElement('div');
+        item.className = 'track-item pending-add';
+        const badges = [`<span class="track-badge new">new</span>`];
         if (track.featured) badges.push(`<span class="track-badge featured">${track.featured}</span>`);
         if (track.tag) badges.push(`<span class="track-badge live">${track.tag}</span>`);
         item.innerHTML = `
@@ -1166,42 +1224,92 @@
             <div class="track-title">${track.artist} — ${track.title}</div>
             <div class="track-meta">${track.subgenre} ${badges.join(' ')}</div>
           </div>
-          <button class="btn btn-danger" data-index="${index}">Remove</button>
+          <button class="btn btn-danger">Undo</button>
         `;
-        item.querySelector('.btn-danger').addEventListener('click', () => deleteShowcase(index));
+        item.querySelector('.btn-danger').addEventListener('click', () => {
+          pendingShowcaseAdds.splice(pIndex, 1);
+          renderShowcase();
+        });
         list.appendChild(item);
       });
 
       container.appendChild(list);
-    }
 
-    async function deleteShowcase(index) {
-      const track = audioData.showcase[index];
-      const ok = await confirm(`Remove <strong>"${track.title}"</strong> by <strong>${track.artist}</strong>?<br>This will delete the audio file from the repository.`);
-      if (!ok) return;
+      // Save bar
+      const hasPending = hasShowcaseChanges();
+      const saveBar = document.createElement('div');
+      saveBar.className = 'tab-save-bar';
+      saveBar.innerHTML = `
+        <button class="btn btn-primary" id="sc-save-btn" ${hasPending ? '' : 'disabled'}>Save Changes</button>
+        <span class="unsaved-badge ${hasPending ? 'visible' : ''}" id="sc-unsaved">Unsaved changes</span>
+      `;
+      container.appendChild(saveBar);
 
-      showStatus('Removing track...', 'loading');
-      try {
-        const removed = audioData.showcase.splice(index, 1)[0];
-        const files = [
-          { path: 'src/_data/audio.json', content: JSON.stringify(audioData, null, 2) + '\n', encoding: 'utf-8' }
-        ];
-        // Delete the audio file too
-        if (removed.url) {
-          files.push({ path: `src${removed.url}`, deleted: true });
+      saveBar.querySelector('#sc-save-btn').addEventListener('click', async () => {
+        if (!hasShowcaseChanges()) return;
+
+        const parts = [];
+        if (pendingShowcaseAdds.length) parts.push(`${pendingShowcaseAdds.length} added`);
+        if (pendingShowcaseDeletes.size) parts.push(`${pendingShowcaseDeletes.size} removed`);
+        const ok = await confirm(`Save showcase changes?<br><strong>${parts.join(', ')}</strong>`);
+        if (!ok) return;
+
+        const btn = saveBar.querySelector('#sc-save-btn');
+        btn.disabled = true;
+        btn.textContent = 'Saving...';
+        showStatus('Saving showcase changes...', 'loading');
+
+        try {
+          const files = [];
+
+          // Add new track files
+          for (const pending of pendingShowcaseAdds) {
+            files.push({
+              path: `src${pending.entry.url}`,
+              content: pending.base64,
+              encoding: 'base64'
+            });
+            audioData.showcase.push(pending.entry);
+          }
+
+          // Remove deleted tracks (process in reverse to keep indices valid)
+          const deleteIndices = [...pendingShowcaseDeletes].sort((a, b) => b - a);
+          for (const idx of deleteIndices) {
+            const removed = audioData.showcase.splice(idx, 1)[0];
+            if (removed.url) {
+              files.push({ path: `src${removed.url}`, deleted: true });
+            }
+          }
+
+          // Updated audio.json
+          files.push({
+            path: 'src/_data/audio.json',
+            content: JSON.stringify(audioData, null, 2) + '\n',
+            encoding: 'utf-8'
+          });
+
+          await batchCommit(files, `admin: update showcase tracks (${parts.join(', ')})`);
+
+          pendingShowcaseAdds = [];
+          pendingShowcaseDeletes = new Set();
+          showStatus('Showcase updated. Site will rebuild in ~30 seconds.');
+          renderShowcase();
+        } catch (e) {
+          showStatus(`Error: ${e.message}`, 'error');
+          // Reload data since state might be inconsistent
+          dataLoaded.audio = false;
+          pendingShowcaseAdds = [];
+          pendingShowcaseDeletes = new Set();
+          loadTab('showcase');
         }
-        await batchCommit(files, `admin: remove showcase track "${removed.title}" by ${removed.artist}`);
-        showStatus(`"${removed.title}" removed. Site will rebuild in ~30 seconds.`);
-        renderShowcase();
-      } catch (e) {
-        showStatus(`Error: ${e.message}`, 'error');
-        // Reload data since state might be inconsistent
-        dataLoaded.audio = false;
-        loadTab('showcase');
-      }
+      });
     }
 
     // === BEFORE/AFTER TAB ===
+    function hasBAChanges() {
+      return pendingBAAdds.length > 0 || pendingBADeletes.size > 0;
+    }
+
     function renderBeforeAfter() {
       const container = document.getElementById('tab-before-after');
       container.innerHTML = '';
@@ -1254,7 +1362,7 @@
             </div>
           </div>
         </div>
-        <button class="btn btn-primary" id="ba-upload-btn">Upload Pair</button>
+        <button class="btn btn-primary" id="ba-upload-btn">Add Pair</button>
       `;
       container.appendChild(form);
 
@@ -1271,7 +1379,7 @@
         });
       });
 
-      // Upload handler
+      // Add handler — buffer locally, don't commit
       const baBeforeInput = form.querySelector('#ba-before-file');
       const baAfterInput = form.querySelector('#ba-after-file');
       form.querySelector('#ba-upload-btn').addEventListener('click', async () => {
@@ -1293,51 +1401,58 @@
         const beforePath = `/assets/audio/before-after/${slug}-before.mp3`;
         const afterPath = `/assets/audio/before-after/${slug}-after.mp3`;
 
-        const ok = await confirm(`Upload <strong>"${title}"</strong> by <strong>${artist}</strong>?<br><code>${slug}-before.mp3</code><br><code>${slug}-after.mp3</code>`);
-        if (!ok) return;
+        const [beforeB64, afterB64] = await Promise.all([fileToBase64(beforeFile), fileToBase64(afterFile)]);
 
-        const btn = form.querySelector('#ba-upload-btn');
-        btn.disabled = true;
-        btn.textContent = 'Uploading...';
-        showStatus('Uploading tracks...', 'loading');
+        const entry = { artist, title, subgenre };
+        if (isLive) entry.live = true;
+        if (featured) entry.featured = featured;
+        entry.before_url = beforePath;
+        entry.after_url = afterPath;
 
-        try {
-          const [beforeB64, afterB64] = await Promise.all([fileToBase64(beforeFile), fileToBase64(afterFile)]);
-
-          const entry = { artist, title, subgenre };
-          if (isLive) entry.live = true;
-          if (featured) entry.featured = featured;
-          entry.before_url = beforePath;
-          entry.after_url = afterPath;
-
-          audioData.before_after.push(entry);
-
-          await batchCommit([
-            { path: `src${beforePath}`, content: beforeB64, encoding: 'base64' },
-            { path: `src${afterPath}`, content: afterB64, encoding: 'base64' },
-            { path: 'src/_data/audio.json', content: JSON.stringify(audioData, null, 2) + '\n', encoding: 'utf-8' }
-          ], `admin: add before/after track "${title}" by ${artist}`);
-
-          showStatus(`"${title}" by ${artist} uploaded. Site will rebuild in ~30 seconds.`);
-          renderBeforeAfter();
-        } catch (e) {
-          audioData.before_after.pop();
-          showStatus(`Error: ${e.message}`, 'error');
-        } finally {
-          btn.disabled = false;
-          btn.textContent = 'Upload Pair';
-        }
+        pendingBAAdds.push({ entry, beforeB64, afterB64 });
+        showStatus(`"${title}" by ${artist} added. Click Save Changes to publish.`);
+        renderBeforeAfter();
       });
 
       // Track list
       const list = document.createElement('div');
       list.className = 'track-list';
-      list.innerHTML = `<h3>Before / After Tracks <span class="track-list-count">(${audioData.before_after.length})</span></h3>`;
+      const totalCount = audioData.before_after.length + pendingBAAdds.length - pendingBADeletes.size;
+      list.innerHTML = `<h3>Before / After Tracks <span class="track-list-count">(${totalCount})</span></h3>`;
 
+      // Existing tracks
       audioData.before_after.forEach((track, index) => {
+        const isDeleting = pendingBADeletes.has(index);
         const item = document.createElement('div');
-        item.className = 'track-item';
+        item.className = 'track-item' + (isDeleting ? ' pending-delete' : '');
         const badges = [];
+        if (track.featured) badges.push(`<span class="track-badge featured">${track.featured}</span>`);
+        if (track.live) badges.push(`<span class="track-badge live">live</span>`);
+        if (isDeleting) badges.push(`<span class="track-badge removing">removing</span>`);
+        item.innerHTML = `
+          <div class="track-info">
+            <div class="track-title">${track.artist} — ${track.title}</div>
+            <div class="track-meta">${track.subgenre} ${badges.join(' ')}</div>
+          </div>
+          <button class="btn btn-danger">${isDeleting ? 'Undo' : 'Remove'}</button>
+        `;
+        item.querySelector('.btn-danger').addEventListener('click', () => {
+          if (isDeleting) {
+            pendingBADeletes.delete(index);
+          } else {
+            pendingBADeletes.add(index);
+          }
+          renderBeforeAfter();
+        });
+        list.appendChild(item);
+      });
+
+      // Pending adds
+      pendingBAAdds.forEach((pending, pIndex) => {
+        const track = pending.entry;
+        const item = document.createElement('div');
+        item.className = 'track-item pending-add';
+        const badges = [`<span class="track-badge new">new</span>`];
         if (track.featured) badges.push(`<span class="track-badge featured">${track.featured}</span>`);
         if (track.live) badges.push(`<span class="track-badge live">live</span>`);
         item.innerHTML = `
@@ -1345,37 +1460,88 @@
             <div class="track-title">${track.artist} — ${track.title}</div>
             <div class="track-meta">${track.subgenre} ${badges.join(' ')}</div>
           </div>
-          <button class="btn btn-danger" data-index="${index}">Remove</button>
+          <button class="btn btn-danger">Undo</button>
         `;
-        item.querySelector('.btn-danger').addEventListener('click', () => deleteBeforeAfter(index));
+        item.querySelector('.btn-danger').addEventListener('click', () => {
+          pendingBAAdds.splice(pIndex, 1);
+          renderBeforeAfter();
+        });
         list.appendChild(item);
       });
 
       container.appendChild(list);
-    }
 
-    async function deleteBeforeAfter(index) {
-      const track = audioData.before_after[index];
-      const ok = await confirm(`Remove <strong>"${track.title}"</strong> by <strong>${track.artist}</strong>?<br>This will delete both audio files from the repository.`);
-      if (!ok) return;
+      // Save bar
+      const hasPending = hasBAChanges();
+      const saveBar = document.createElement('div');
+      saveBar.className = 'tab-save-bar';
+      saveBar.innerHTML = `
+        <button class="btn btn-primary" id="ba-save-btn" ${hasPending ? '' : 'disabled'}>Save Changes</button>
+        <span class="unsaved-badge ${hasPending ? 'visible' : ''}" id="ba-unsaved">Unsaved changes</span>
+      `;
+      container.appendChild(saveBar);
 
-      showStatus('Removing track...', 'loading');
-      try {
-        const removed = audioData.before_after.splice(index, 1)[0];
-        const files = [
-          { path: 'src/_data/audio.json', content: JSON.stringify(audioData, null, 2) + '\n', encoding: 'utf-8' }
-        ];
-        if (removed.before_url) files.push({ path: `src${removed.before_url}`, deleted: true });
-        if (removed.after_url) files.push({ path: `src${removed.after_url}`, deleted: true });
+      saveBar.querySelector('#ba-save-btn').addEventListener('click', async () => {
+        if (!hasBAChanges()) return;
 
-        await batchCommit(files, `admin: remove before/after track "${removed.title}" by ${removed.artist}`);
-        showStatus(`"${removed.title}" removed. Site will rebuild in ~30 seconds.`);
-        renderBeforeAfter();
-      } catch (e) {
-        showStatus(`Error: ${e.message}`, 'error');
-        dataLoaded.audio = false;
-        loadTab('before-after');
-      }
+        const parts = [];
+        if (pendingBAAdds.length) parts.push(`${pendingBAAdds.length} added`);
+        if (pendingBADeletes.size) parts.push(`${pendingBADeletes.size} removed`);
+        const ok = await confirm(`Save before/after changes?<br><strong>${parts.join(', ')}</strong>`);
+        if (!ok) return;
+
+        const btn = saveBar.querySelector('#ba-save-btn');
+        btn.disabled = true;
+        btn.textContent = 'Saving...';
+        showStatus('Saving before/after changes...', 'loading');
+
+        try {
+          const files = [];
+
+          // Add new track files
+          for (const pending of pendingBAAdds) {
+            files.push({
+              path: `src${pending.entry.before_url}`,
+              content: pending.beforeB64,
+              encoding: 'base64'
+            });
+            files.push({
+              path: `src${pending.entry.after_url}`,
+              content: pending.afterB64,
+              encoding: 'base64'
+            });
+            audioData.before_after.push(pending.entry);
+          }
+
+          // Remove deleted tracks (process in reverse to keep indices valid)
+          const deleteIndices = [...pendingBADeletes].sort((a, b) => b - a);
+          for (const idx of deleteIndices) {
+            const removed = audioData.before_after.splice(idx, 1)[0];
+            if (removed.before_url) files.push({ path: `src${removed.before_url}`, deleted: true });
+            if (removed.after_url) files.push({ path: `src${removed.after_url}`, deleted: true });
+          }
+
+          // Updated audio.json
+          files.push({
+            path: 'src/_data/audio.json',
+            content: JSON.stringify(audioData, null, 2) + '\n',
+            encoding: 'utf-8'
+          });
+
+          await batchCommit(files, `admin: update before/after tracks (${parts.join(', ')})`);
+
+          pendingBAAdds = [];
+          pendingBADeletes = new Set();
+          showStatus('Before/after tracks updated. Site will rebuild in ~30 seconds.');
+          renderBeforeAfter();
+        } catch (e) {
+          showStatus(`Error: ${e.message}`, 'error');
+          dataLoaded.audio = false;
+          pendingBAAdds = [];
+          pendingBADeletes = new Set();
+          loadTab('before-after');
+        }
+      });
     }
 
     // === SEO TAB ===
@@ -1604,76 +1770,119 @@
       `;
       container.appendChild(addCard);
 
-      addCard.querySelector('#cl-add-btn').addEventListener('click', async () => {
+      // Add handler — buffer locally, don't commit
+      addCard.querySelector('#cl-add-btn').addEventListener('click', () => {
         const name = addCard.querySelector('#cl-name').value.trim();
         const projectsStr = addCard.querySelector('#cl-projects').value.trim();
         if (!name) { showStatus('Client name is required.', 'error'); return; }
         const projects = projectsStr ? projectsStr.split(',').map(p => p.trim()).filter(Boolean) : ['Podcast'];
 
-        const ok = await confirm(`Add <strong>${escAttr(name)}</strong> with ${projects.length} project${projects.length !== 1 ? 's' : ''}?`);
-        if (!ok) return;
-
-        const btn = addCard.querySelector('#cl-add-btn');
-        btn.disabled = true;
-        btn.textContent = 'Adding...';
-        showStatus('Adding client...', 'loading');
-
-        try {
-          brandsData.items.push({ name, projects });
-          await batchCommit([
-            { path: 'src/_data/brands.json', content: JSON.stringify(brandsData, null, 2) + '\n', encoding: 'utf-8' }
-          ], `admin: add client "${name}"`);
-          showStatus(`${name} added. Site will rebuild in ~30 seconds.`);
-          renderClients();
-        } catch (e) {
-          brandsData.items.pop();
-          showStatus(`Error: ${e.message}`, 'error');
-        } finally {
-          btn.disabled = false;
-          btn.textContent = 'Add Client';
-        }
+        pendingClientAdds.push({ name, projects });
+        showStatus(`${name} added. Click Save Changes to publish.`);
+        renderClients();
       });
 
       // Client list
       const list = document.createElement('div');
       list.className = 'track-list';
-      list.innerHTML = `<h3>Clients & Brands <span class="track-list-count">(${brandsData.items.length})</span></h3>`;
+      const totalCount = brandsData.items.length + pendingClientAdds.length - pendingClientDeletes.size;
+      list.innerHTML = `<h3>Clients & Brands <span class="track-list-count">(${totalCount})</span></h3>`;
 
+      // Existing clients
       brandsData.items.forEach((brand, index) => {
+        const isDeleting = pendingClientDeletes.has(index);
         const item = document.createElement('div');
-        item.className = 'track-item';
+        item.className = 'track-item' + (isDeleting ? ' pending-delete' : '');
         item.innerHTML = `
           <div class="track-info">
-            <div class="track-title">${escAttr(brand.name)}</div>
+            <div class="track-title">${escAttr(brand.name)}${isDeleting ? ' <span class="track-badge removing">removing</span>' : ''}</div>
             <div class="track-meta">${brand.projects.map(p => escAttr(p)).join(', ')}</div>
           </div>
-          <button class="btn btn-danger">Remove</button>
+          <button class="btn btn-danger">${isDeleting ? 'Undo' : 'Remove'}</button>
         `;
-        item.querySelector('.btn-danger').addEventListener('click', () => deleteClient(index));
+        item.querySelector('.btn-danger').addEventListener('click', () => {
+          if (isDeleting) {
+            pendingClientDeletes.delete(index);
+          } else {
+            pendingClientDeletes.add(index);
+          }
+          renderClients();
+        });
+        list.appendChild(item);
+      });
+
+      // Pending adds
+      pendingClientAdds.forEach((brand, pIndex) => {
+        const item = document.createElement('div');
+        item.className = 'track-item pending-add';
+        item.innerHTML = `
+          <div class="track-info">
+            <div class="track-title">${escAttr(brand.name)} <span class="track-badge new">new</span></div>
+            <div class="track-meta">${brand.projects.map(p => escAttr(p)).join(', ')}</div>
+          </div>
+          <button class="btn btn-danger">Undo</button>
+        `;
+        item.querySelector('.btn-danger').addEventListener('click', () => {
+          pendingClientAdds.splice(pIndex, 1);
+          renderClients();
+        });
         list.appendChild(item);
       });
 
       container.appendChild(list);
-    }
 
-    async function deleteClient(index) {
-      const brand = brandsData.items[index];
-      const ok = await confirm(`Remove <strong>${escAttr(brand.name)}</strong>?`);
-      if (!ok) return;
+      // Save bar for clients
+      const hasClientChanges = pendingClientAdds.length > 0 || pendingClientDeletes.size > 0;
+      const saveBar = document.createElement('div');
+      saveBar.className = 'tab-save-bar';
+      saveBar.innerHTML = `
+        <button class="btn btn-primary" id="cl-save-btn" ${hasClientChanges ? '' : 'disabled'}>Save Changes</button>
+        <span class="unsaved-badge ${hasClientChanges ? 'visible' : ''}" id="cl-unsaved">Unsaved changes</span>
+      `;
+      container.appendChild(saveBar);
 
-      showStatus('Removing client...', 'loading');
-      try {
-        brandsData.items.splice(index, 1);
-        await batchCommit([
-          { path: 'src/_data/brands.json', content: JSON.stringify(brandsData, null, 2) + '\n', encoding: 'utf-8' }
-        ], `admin: remove client "${brand.name}"`);
-        showStatus(`${brand.name} removed. Site will rebuild in ~30 seconds.`);
-        renderClients();
-      } catch (e) {
-        showStatus(`Error: ${e.message}`, 'error');
-        dataLoaded.clients = false;
-        loadTab('clients');
-      }
+      saveBar.querySelector('#cl-save-btn').addEventListener('click', async () => {
+        if (!pendingClientAdds.length && !pendingClientDeletes.size) return;
+
+        const parts = [];
+        if (pendingClientAdds.length) parts.push(`${pendingClientAdds.length} added`);
+        if (pendingClientDeletes.size) parts.push(`${pendingClientDeletes.size} removed`);
+        const ok = await confirm(`Save client changes?<br><strong>${parts.join(', ')}</strong>`);
+        if (!ok) return;
+
+        const btn = saveBar.querySelector('#cl-save-btn');
+        btn.disabled = true;
+        btn.textContent = 'Saving...';
+        showStatus('Saving client changes...', 'loading');
+
+        try {
+          // Add new clients
+          for (const client of pendingClientAdds) {
+            brandsData.items.push(client);
+          }
+
+          // Remove deleted clients (process in reverse to keep indices valid)
+          const deleteIndices = [...pendingClientDeletes].sort((a, b) => b - a);
+          for (const idx of deleteIndices) {
+            brandsData.items.splice(idx, 1);
+          }
+
+          await batchCommit([
+            { path: 'src/_data/brands.json', content: JSON.stringify(brandsData, null, 2) + '\n', encoding: 'utf-8' }
+          ], `admin: update clients (${parts.join(', ')})`);
+
+          pendingClientAdds = [];
+          pendingClientDeletes = new Set();
+          showStatus('Clients updated. Site will rebuild in ~30 seconds.');
+          renderClients();
+        } catch (e) {
+          showStatus(`Error: ${e.message}`, 'error');
+          dataLoaded.clients = false;
+          pendingClientAdds = [];
+          pendingClientDeletes = new Set();
+          loadTab('clients');
+        }
+      });
     }
 
     // === INIT ===
