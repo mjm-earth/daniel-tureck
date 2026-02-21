@@ -1,5 +1,9 @@
 {
-  "subgenres": ["R&B", "Hip-Hop", "Live"],
+  "subgenres": [
+    "R&B",
+    "Hip-Hop",
+    "Live"
+  ],
   "before_after": [
     {
       "artist": "Daniel Kristoff",
@@ -249,6 +253,14 @@
       "subgenre": "R&B",
       "tag": "live",
       "url": "/assets/audio/showcase/morgan-my-my-my.mp3"
+    },
+    {
+      "artist": "test",
+      "title": "test",
+      "subgenre": "R&B",
+      "tag": "live",
+      "featured": "R&B",
+      "url": "/assets/audio/showcase/test-test.mp3"
     }
   ]
 }
