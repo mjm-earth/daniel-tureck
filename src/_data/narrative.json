@@ -1,7 +1,25 @@
 {
-  "heading": "Some music has a pulse you cannot fake.",
-  "paragraphs": [
-    "Before mixing records, Daniel spent years on the other side of music. Digging through vinyl as a DJ in the Bay Area. Learning piano and falling into jazz. Growing up on hip hop, soul, R&B, and reggae.",
-    "Not studying theory — studying why songs move people. That instinct still guides every mix. He doesn't change songs. He makes what's already great shine."
-  ]
+  "highlights": [
+    {
+      "icon": "pin",
+      "headline": "Bay Area Roots",
+      "text": "I grew up in the Bay Area as a DJ, digging through crates and studying what makes songs move people."
+    },
+    {
+      "icon": "waveform",
+      "headline": "Feel Over Theory",
+      "text": "I've always worked in hip-hop, soul, and R&B. Genres that prioritize groove and emotional weight."
+    },
+    {
+      "icon": "sliders",
+      "headline": "Mix Approach",
+      "text": "I don't reshape your song. I reveal what's already there and expand it until it lands the way you heard it in your head."
+    },
+    {
+      "icon": "home",
+      "headline": "Long Beach, CA",
+      "text": "Working out of my private studio. Every session is focused, detail-driven, ego-free."
+    }
+  ],
+  "paragraphs": []
 }

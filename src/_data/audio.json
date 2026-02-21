@@ -1,0 +1,253 @@
+{
+  "subgenres": ["R&B", "Hip-Hop", "Live"],
+  "before_after": [
+    {
+      "artist": "Daniel Kristoff",
+      "title": "Promise",
+      "subgenre": "R&B",
+      "before_url": "/assets/audio/before-after/daniel-kristoff-promise-before.mp3",
+      "after_url": "/assets/audio/before-after/daniel-kristoff-promise-after.mp3"
+    },
+    {
+      "artist": "Bestie",
+      "title": "Freaky Sauna Dragonfly",
+      "subgenre": "R&B",
+      "featured": "all",
+      "before_url": "/assets/audio/before-after/bestie-freakysaunadragonfly-before.mp3",
+      "after_url": "/assets/audio/before-after/bestie-freakysaunadragonfly-after.mp3"
+    },
+    {
+      "artist": "James Vickery",
+      "title": "Fall In Your Arms",
+      "subgenre": "Live",
+      "live": true,
+      "featured": "Live",
+      "before_url": "/assets/audio/before-after/james-vickery-fall-in-your-arms-before.mp3",
+      "after_url": "/assets/audio/before-after/james-vickery-fall-in-your-arms-after.mp3"
+    },
+    {
+      "artist": "My Cousin's House",
+      "title": "Hucci",
+      "subgenre": "Hip-Hop",
+      "featured": "Hip-Hop",
+      "before_url": "/assets/audio/before-after/my-cousins-house-hucci-before.mp3",
+      "after_url": "/assets/audio/before-after/my-cousins-house-hucci-after.mp3"
+    },
+    {
+      "artist": "Cameo Adele",
+      "title": "Communication",
+      "subgenre": "R&B",
+      "before_url": "/assets/audio/before-after/cameo-adele-communication-before.mp3",
+      "after_url": "/assets/audio/before-after/cameo-adele-communication-after.mp3"
+    },
+    {
+      "artist": "Sterling Victorian",
+      "title": "Come Alive",
+      "subgenre": "Hip-Hop",
+      "before_url": "/assets/audio/before-after/sterling-victorian-come-alive-before.mp3",
+      "after_url": "/assets/audio/before-after/sterling-victorian-come-alive-after.mp3"
+    }
+  ],
+  "showcase": [
+    {
+      "artist": "My Cousin's House",
+      "title": "Beautiful",
+      "subgenre": "Hip-Hop",
+      "tag": "",
+      "featured": "all",
+      "url": "/assets/audio/before-after/my-cousins-house-beautiful-after.mp3"
+    },
+    {
+      "artist": "Badi",
+      "title": "Already Made It",
+      "subgenre": "R&B",
+      "tag": "",
+      "url": "/assets/audio/showcase/badi-already-made-it.mp3"
+    },
+    {
+      "artist": "Badi",
+      "title": "Missing Piece",
+      "subgenre": "R&B",
+      "tag": "",
+      "featured": "R&B",
+      "url": "/assets/audio/showcase/badi-missing-piece.mp3"
+    },
+    {
+      "artist": "Bestie",
+      "title": "Wet Dreams",
+      "subgenre": "R&B",
+      "tag": "",
+      "url": "/assets/audio/showcase/bestie-wet-dreams.mp3"
+    },
+    {
+      "artist": "Bestie",
+      "title": "Counterfeit",
+      "subgenre": "R&B",
+      "tag": "",
+      "featured": "R&B",
+      "url": "/assets/audio/showcase/bestie-counterfeit.mp3"
+    },
+    {
+      "artist": "Bestie",
+      "title": "Looking For Love",
+      "subgenre": "R&B",
+      "tag": "",
+      "url": "/assets/audio/showcase/bestie-looking-for-love.mp3"
+    },
+    {
+      "artist": "Everett Gabriel",
+      "title": "Happy Hour",
+      "subgenre": "R&B",
+      "tag": "",
+      "url": "/assets/audio/showcase/everett-gabriel-happy-hour.mp3"
+    },
+    {
+      "artist": "Everett Gabriel",
+      "title": "Noise",
+      "subgenre": "R&B",
+      "tag": "",
+      "url": "/assets/audio/showcase/everett-gabriel-noise.mp3"
+    },
+    {
+      "artist": "Blcknoise",
+      "title": "The Fall",
+      "subgenre": "R&B",
+      "tag": "",
+      "url": "/assets/audio/showcase/blcknoise-the-fall.mp3"
+    },
+    {
+      "artist": "Blcknoise",
+      "title": "Wishes For Fishes",
+      "subgenre": "R&B",
+      "tag": "",
+      "featured": "R&B",
+      "url": "/assets/audio/showcase/blcknoise-wishes-for-fishes.mp3"
+    },
+    {
+      "artist": "Cardigan Deville",
+      "title": "Mamba Flow",
+      "subgenre": "Hip-Hop",
+      "tag": "",
+      "featured": "Hip-Hop",
+      "url": "/assets/audio/showcase/cardigan-deville-mamba-flow.mp3"
+    },
+    {
+      "artist": "King Fantastic",
+      "title": "Demigod Talk",
+      "subgenre": "Hip-Hop",
+      "tag": "",
+      "url": "/assets/audio/showcase/king-fantastic-demigod-talk.mp3"
+    },
+    {
+      "artist": "King Fantastic",
+      "title": "A Bit Condescending",
+      "subgenre": "Hip-Hop",
+      "tag": "",
+      "url": "/assets/audio/showcase/king-fantastic-a-bit-condescending.mp3"
+    },
+    {
+      "artist": "King Fantastic",
+      "title": "Band in Moscow",
+      "subgenre": "Hip-Hop",
+      "tag": "",
+      "url": "/assets/audio/showcase/king-fantastic-band-in-moscow.mp3"
+    },
+    {
+      "artist": "King Fantastic",
+      "title": "Cocky Old Bastard",
+      "subgenre": "Hip-Hop",
+      "tag": "",
+      "featured": "Hip-Hop",
+      "url": "/assets/audio/showcase/king-fantastic-cocky-old-bastard.mp3"
+    },
+    {
+      "artist": "Aye Mitch!",
+      "title": "Gravy",
+      "subgenre": "Hip-Hop",
+      "tag": "",
+      "featured": "Hip-Hop",
+      "url": "/assets/audio/showcase/aye-mitch-gravy.mp3"
+    },
+    {
+      "artist": "3BlackKids",
+      "title": "Bad Sex",
+      "subgenre": "Hip-Hop",
+      "tag": "",
+      "url": "/assets/audio/showcase/3blackkids-bad-sex.mp3"
+    },
+    {
+      "artist": "Daniel Kristoff",
+      "title": "Proven Myself",
+      "subgenre": "R&B",
+      "tag": "",
+      "featured": "all",
+      "url": "/assets/audio/showcase/daniel-kristoff-proven-myself.mp3"
+    },
+    {
+      "artist": "Daniel Kristoff",
+      "title": "Purpose",
+      "subgenre": "R&B",
+      "tag": "",
+      "url": "/assets/audio/showcase/daniel-kristoff-purpose.mp3"
+    },
+    {
+      "artist": "Arin Ray",
+      "title": "Sometime",
+      "subgenre": "R&B",
+      "tag": "live",
+      "featured": "Live",
+      "url": "/assets/audio/showcase/arin-ray-sometime.mp3"
+    },
+    {
+      "artist": "BJ the Chicago Kid",
+      "title": "Close",
+      "subgenre": "R&B",
+      "tag": "live",
+      "featured": "Live",
+      "url": "/assets/audio/showcase/bj-the-chicago-kid-close.mp3"
+    },
+    {
+      "artist": "James Vickery",
+      "title": "Butter",
+      "subgenre": "R&B",
+      "tag": "live",
+      "url": "/assets/audio/showcase/james-vickery-butter.mp3"
+    },
+    {
+      "artist": "James Vickery",
+      "title": "Hotel Lobby",
+      "subgenre": "R&B",
+      "tag": "live",
+      "url": "/assets/audio/showcase/james-vickery-hotel-lobby.mp3"
+    },
+    {
+      "artist": "Justine Skye",
+      "title": "Build",
+      "subgenre": "R&B",
+      "tag": "live",
+      "url": "/assets/audio/showcase/justine-skye-build.mp3"
+    },
+    {
+      "artist": "K. Roosevelt",
+      "title": "Feelings Don't Change",
+      "subgenre": "R&B",
+      "tag": "live",
+      "url": "/assets/audio/showcase/k-roosevelt-feelings-dont-change.mp3"
+    },
+    {
+      "artist": "Morgan",
+      "title": "Wheel Up",
+      "subgenre": "R&B",
+      "tag": "live",
+      "featured": "all",
+      "url": "/assets/audio/showcase/morgan-wheel-up.mp3"
+    },
+    {
+      "artist": "Morgan",
+      "title": "MY My My",
+      "subgenre": "R&B",
+      "tag": "live",
+      "url": "/assets/audio/showcase/morgan-my-my-my.mp3"
+    }
+  ]
+}

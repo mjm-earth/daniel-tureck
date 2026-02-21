@@ -1,0 +1,13 @@
+{
+  "title": "Podcast & Brand Audio | Daniel Tureck - Mix Engineer, Editor, Sound Designer",
+  "description": "Daniel Tureck is a podcast mix engineer, editor and sound designer based in Long Beach, CA. Clients include Audible, Disney, Hulu, Vox Media, MSNBC, iHeart Media, Spotify and more.",
+  "intro": "Daniel has spent years working across podcast production, commercial audio and branded content - editing, mixing, mastering and sound designing projects for some of the biggest names in the space.",
+  "services": [
+    { "name": "Podcast Mixing", "icon": "mixing", "description": "Full mix of dialogue, music and sound effects for a polished, broadcast-ready episode." },
+    { "name": "Podcast Editing", "icon": "editing", "description": "Dialogue editing, timing, pacing and cleanup to keep the conversation tight and natural." },
+    { "name": "Sound Design", "icon": "sound-design", "description": "Custom sound design, transitions and sonic branding that give a show its own identity." },
+    { "name": "Mastering", "icon": "mastering", "description": "Final loudness, EQ and format delivery optimized for every streaming platform." },
+    { "name": "Scoring", "icon": "scoring", "description": "Original music and underscore composed to fit the tone and arc of your show." },
+    { "name": "Commercial Audio", "icon": "commercial", "description": "Audio production for TV spots, branded content and media campaigns." }
+  ]
+}

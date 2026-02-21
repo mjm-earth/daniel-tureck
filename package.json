@@ -8,5 +8,10 @@
   },
   "devDependencies": {
     "@11ty/eleventy": "^3.0.0"
+  },
+  "dependencies": {
+    "sharp": "^0.32.6",
+    "smartcrop": "^2.0.5",
+    "smartcrop-sharp": "^2.0.8"
   }
 }

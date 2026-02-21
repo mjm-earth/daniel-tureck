@@ -30,7 +30,9 @@ collections:
           - { label: "Name", name: "name", widget: "string" }
           - { label: "Headline", name: "headline", widget: "string" }
           - { label: "Main Photo", name: "photo", widget: "image" }
-          - { label: "Phrase", name: "phrase", widget: "string", hint: "Big text below main photo" }
+          - { label: "Phrase", name: "phrase", widget: "string", hint: "Big text below main photo (e.g. Pocket. Groove. Emotional weight.)" }
+          - { label: "Hero Sentence", name: "hero_sentence", widget: "string", hint: "Sentence below headline on hero" }
+          - { label: "Tagline", name: "tagline", widget: "string", hint: "Featured tagline in narrative section" }
 
       - name: "narrative"
         label: "Narrative"
@@ -66,6 +68,7 @@ collections:
           - { label: "Studio Name", name: "name", widget: "string" }
           - { label: "Heading", name: "heading", widget: "string" }
           - { label: "Photo", name: "image", widget: "image" }
+          - { label: "Identity Line", name: "identity", widget: "string", required: false, hint: "e.g. Mixed at Robotslap Studios" }
           - label: "Description"
             name: "paragraphs"
             widget: "list"
@@ -79,6 +82,60 @@ collections:
           - { label: "Player Embed Code", name: "player_embed", widget: "text", required: false, hint: "Paste Spotify, SoundCloud, or other embed HTML" }
           - { label: "Credits Link", name: "credits_link", widget: "string" }
           - { label: "Credits Link Text", name: "credits_text", widget: "string" }
+
+      - name: "brands"
+        label: "Podcasts & Brands"
+        file: "src/_data/brands.json"
+        fields:
+          - { label: "Heading", name: "heading", widget: "string" }
+          - { label: "Subheading", name: "subheading", widget: "string" }
+          - label: "Brand Items"
+            name: "items"
+            widget: "list"
+            fields:
+              - { label: "Brand Name", name: "name", widget: "string" }
+              - { label: "Project", name: "project", widget: "string" }
+          - label: "Commercials"
+            name: "commercials"
+            widget: "list"
+            fields:
+              - { label: "Brand Name", name: "name", widget: "string" }
+              - { label: "Type", name: "type", widget: "string" }
+
+      - name: "faq"
+        label: "FAQ"
+        file: "src/_data/faq.json"
+        fields:
+          - { label: "Heading", name: "heading", widget: "string" }
+          - label: "Questions"
+            name: "items"
+            widget: "list"
+            fields:
+              - { label: "Question", name: "question", widget: "string" }
+              - { label: "Answer", name: "answer", widget: "text" }
+
+      - name: "audio"
+        label: "Audio Player"
+        file: "src/_data/audio.json"
+        fields:
+          - label: "Before & After Tracks"
+            name: "before_after"
+            widget: "list"
+            fields:
+              - { label: "Artist", name: "artist", widget: "string" }
+              - { label: "Track Title", name: "title", widget: "string" }
+              - { label: "Genre", name: "genre", widget: "string" }
+              - { label: "Before URL", name: "before_url", widget: "string" }
+              - { label: "After URL", name: "after_url", widget: "string" }
+          - label: "Showcase Tracks"
+            name: "showcase"
+            widget: "list"
+            fields:
+              - { label: "Artist", name: "artist", widget: "string" }
+              - { label: "Track Title", name: "title", widget: "string" }
+              - { label: "Genre", name: "genre", widget: "string" }
+              - { label: "Tag (e.g. live)", name: "tag", widget: "string", required: false }
+              - { label: "Audio URL", name: "url", widget: "string" }
 
       - name: "cta"
         label: "Contact / CTA"

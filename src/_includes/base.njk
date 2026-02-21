@@ -3,13 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>{{ site.title }}</title>
-  <meta name="description" content="{{ site.description }}">
+  <title>{{ pageTitle or site.title }}</title>
+  <meta name="description" content="{{ pageDescription or site.description }}">
 
   <!-- Open Graph -->
-  <meta property="og:title" content="{{ site.title }}">
-  <meta property="og:description" content="{{ site.description }}">
-  <meta property="og:image" content="{{ site.url }}{{ bio.photo | url }}">
+  <meta property="og:title" content="{{ pageTitle or site.title }}">
+  <meta property="og:description" content="{{ pageDescription or site.description }}">
+  <meta property="og:image" content="{{ site.url }}{{ bio.photo }}">
   <meta property="og:url" content="{{ site.url }}/">
   <meta property="og:type" content="website">
 
@@ -17,15 +17,18 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="{{ site.title }}">
   <meta name="twitter:description" content="{{ site.description }}">
-  <meta name="twitter:image" content="{{ site.url }}{{ bio.photo | url }}">
+  <meta name="twitter:image" content="{{ site.url }}{{ bio.photo }}">
 
   <!-- Canonical -->
   <link rel="canonical" href="{{ site.url }}/">
 
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="{{ '/assets/images/robot-slap-logo.svg' | url }}">
+
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Caveat&display=swap" rel="stylesheet">
 
   <link rel="stylesheet" href="{{ '/css/style.css' | url }}">
 
@@ -38,7 +41,7 @@
     "jobTitle": "{{ bio.headline }}",
     "description": "{{ site.description }}",
     "url": "{{ site.url }}/",
-    "image": "{{ site.url }}{{ bio.photo | url }}",
+    "image": "{{ site.url }}{{ bio.photo }}",
     "workLocation": {
       "@type": "Place",
       "name": "{{ studio.name }}"
@@ -48,5 +51,6 @@
 </head>
 <body>
   {{ content | safe }}
+  <script src="{{ '/js/main.js' | url }}" defer></script>
 </body>
 </html>

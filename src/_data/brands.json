@@ -1,0 +1,21 @@
+{
+  "items": [
+    { "name": "Disney", "projects": ["Percy Jackson & The Olympians Podcast"] },
+    { "name": "Audible", "projects": ["The Thin Line", "What Could Go Wrong", "Unsealed: The Tylenol Murders"] },
+    { "name": "Hulu", "projects": ["Tell Me Lies Official Podcast"] },
+    { "name": "Vox Media", "projects": ["Brene Brown - Unlocking Us", "Sam Sanders - Into It", "Vox Conversations", "Galaxy Brains"] },
+    { "name": "iHeart Media", "projects": ["Fallen Angels", "Whistle Blowers"] },
+    { "name": "MSNBC", "projects": ["Rachel Maddow - Bag Man"] },
+    { "name": "History Channel", "projects": ["Making Washington", "Making Grant"] },
+    { "name": "Spotify", "projects": ["Peak 2000's"] },
+    { "name": "Stephen Curry", "projects": ["Greatest Sports Stories Never Told"] },
+    { "name": "Amy Poehler", "projects": ["Say More with Dr. Sheila"] },
+    { "name": "LA Times", "projects": ["Larger Than Life"] },
+    { "name": "Greetings From Somewhere", "projects": ["Podcast"] },
+    { "name": "Only One In The Room", "projects": ["Podcast"] },
+    { "name": "Manscaped", "projects": ["TV Commercial"] },
+    { "name": "CDPH", "projects": ["TV Commercial"] },
+    { "name": "Opera Web Browser", "projects": ["TV Commercial"] },
+    { "name": "Red Bull Records", "projects": ["SOUNDS Series"] }
+  ]
+}

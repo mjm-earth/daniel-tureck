@@ -2,126 +2,308 @@
 layout: base.njk
 ---
 
+<!-- Fixed Nav (scroll) -->
+<nav class="nav" id="fixedNav">
+  <div class="nav__inner">
+    <a href="#" class="nav__name">Daniel Tureck</a>
+    <div class="nav__links">
+      <a href="#" class="nav__link nav__link--home">
+        <svg class="nav__icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        Home
+      </a>
+      <a href="#work" class="nav__link">
+        <svg class="nav__icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/></svg>
+        Mixes
+      </a>
+      <a href="#studio" class="nav__link">
+        <svg class="nav__icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="10" width="16" height="10" rx="2"/><circle cx="9" cy="15" r="1.5"/><circle cx="15" cy="15" r="1.5"/><path d="M12 2v4"/><circle cx="12" cy="2" r="1"/><path d="M2 14h2"/><path d="M20 14h2"/></svg>
+        Studio
+      </a>
+      <a href="#contact" class="nav__link">
+        <svg class="nav__icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+        Contact
+      </a>
+    </div>
+  </div>
+</nav>
+
 <!-- Hero -->
 <section class="hero">
-  <div class="container">
-    <div class="hero__logo"></div>
-    <h1 class="hero__name">{{ bio.name | replace(" ", "<br>") | safe }}</h1>
-    <p class="hero__subtitle">{{ bio.headline }}</p>
-  </div>
-</section>
-
-<!-- Photo + Phrase -->
-<section class="photo-phrase">
-  <div class="container">
-    <div class="photo-large">
-      <img src="{{ bio.photo | url }}" alt="{{ bio.name }}" width="1920" height="1280" decoding="async">
+  <div class="hero__top">
+    <div class="hero__header">
+      <h1 class="hero__name">{{ bio.name }}</h1>
     </div>
-    <h2 class="phrase">{{ bio.phrase }}</h2>
-  </div>
-</section>
-
-<!-- Narrative -->
-<section class="narrative">
-  <div class="container">
-    <div class="narrative__content">
-      <h3 class="narrative__heading">{{ narrative.heading }}</h3>
-      <div class="narrative__text">
-        {% for paragraph in narrative.paragraphs %}
-        <p>{{ paragraph }}</p>
-        {% endfor %}
+    <nav class="hero__nav">
+      <div class="nav__links">
+        <a href="#work" class="nav__link">Mixes</a>
+        <a href="#studio" class="nav__link">Studio</a>
+        <a href="#contact" class="nav__link">Contact</a>
       </div>
-    </div>
+    </nav>
+  </div>
+  <div class="hero__content">
+    <img src="{{ '/assets/images/robot-slap-logo.svg' | url }}" alt="Robot Slap Studios" class="hero__logo">
   </div>
 </section>
 
-<!-- Photo Grid -->
-<section class="photo-grid">
+<!-- Photo Break -->
+<div class="section-photo">
+  <img src="{{ '/assets/images/picks/portrait-9406.jpg' | url }}" alt="Daniel Tureck at the console" width="1920" height="1280" decoding="async" style="object-position: 50% 20%">
+</div>
+
+<!-- About -->
+<section class="about" id="about">
   <div class="container">
-    <div class="photo-grid__grid">
-      {% for photo in photos.grid %}
-      <div class="photo-grid__item">
-        <img src="{{ photo.image | url }}" alt="{{ photo.alt }}" width="1920" height="1280" loading="lazy" decoding="async">
+    <h2 class="section-label">About</h2>
+
+    <div class="highlights">
+      {% for item in narrative.highlights %}
+      <div class="highlight-card">
+        <div class="highlight-card__icon">
+          {% if item.icon == "vinyl" %}
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/><line x1="12" y1="2" x2="12" y2="4"/><line x1="12" y1="20" x2="12" y2="22"/><line x1="4" y1="8" x2="6" y2="9"/><line x1="18" y1="15" x2="20" y2="16"/></svg>
+          {% elif item.icon == "waveform" %}
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="8" x2="4" y2="16"/><line x1="8" y1="4" x2="8" y2="20"/><line x1="12" y1="6" x2="12" y2="18"/><line x1="16" y1="9" x2="16" y2="15"/><line x1="20" y1="10" x2="20" y2="14"/></svg>
+          {% elif item.icon == "sliders" %}
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/></svg>
+          {% elif item.icon == "pin" %}
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          {% elif item.icon == "home" %}
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+          {% endif %}
+        </div>
+        <h3 class="highlight-card__headline">{{ item.headline }}</h3>
+        <p class="highlight-card__text">{{ item.text }}</p>
       </div>
       {% endfor %}
     </div>
   </div>
 </section>
 
+<!-- Photo Break -->
+<div class="section-photo">
+  <img src="{{ '/assets/images/picks/mjm-9563.jpg' | url }}" alt="Robot Slap Studios through the window" width="1920" height="1280" loading="lazy" decoding="async"{% if imageCrops['/assets/images/picks/mjm-9563.jpg'] %} style="object-position: {{ imageCrops['/assets/images/picks/mjm-9563.jpg'] }}"{% endif %}>
+</div>
+
+<!-- Work -->
+<section class="listen" id="work">
+  <div class="container">
+    <h2 class="section-label">Mixes</h2>
+
+    <!-- Subgenre Filters -->
+    <div class="subgenre-filters reveal">
+      <button class="subgenre-filter active" data-filter="all">All</button>
+      {% for sub in audio.subgenres %}
+      <button class="subgenre-filter" data-filter="{{ sub }}">{{ sub }}</button>
+      {% endfor %}
+    </div>
+
+    {% macro abTrack(track) %}
+    <div class="ab-track" data-subgenre="{{ track.subgenre }}"{% if track.live %} data-live="true"{% endif %}{% if track.featured %} data-featured="{{ track.featured }}"{% endif %} data-before="{{ track.before_url | url }}" data-after="{{ track.after_url | url }}">
+      <div class="ab-track__info">
+        <button class="ab-track__play" aria-label="Play {{ track.artist }} - {{ track.title }}">
+          <svg class="ab-track__icon-play" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+          <svg class="ab-track__icon-pause" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
+        </button>
+        <div class="ab-track__meta">
+          <span class="ab-track__artist">{{ track.artist }}</span>
+          <span class="ab-track__title">{{ track.title }}</span>
+        </div>
+        <span class="ab-track__genre">{{ track.subgenre }}</span>
+      </div>
+      <div class="ab-track__controls">
+        <div class="ab-track__toggle">
+          <button class="ab-toggle ab-toggle--after ab-toggle--active">After</button>
+          <button class="ab-toggle ab-toggle--before">Before</button>
+        </div>
+        <div class="ab-track__progress">
+          <div class="ab-track__bar"></div>
+        </div>
+        <div class="ab-track__times">
+          <span class="ab-track__time">0:00</span>
+          <span class="ab-track__duration">0:00</span>
+        </div>
+      </div>
+    </div>
+    {% endmacro %}
+
+    {% macro showcaseTrack(track) %}
+    <div class="showcase-track" data-subgenre="{{ track.subgenre }}"{% if track.tag == "live" %} data-live="true"{% endif %}{% if track.featured %} data-featured="{{ track.featured }}"{% endif %} data-src="{{ track.url | url }}">
+      <button class="showcase-track__play" aria-label="Play {{ track.artist }} - {{ track.title }}">
+        <svg class="showcase-track__icon-play" width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+        <svg class="showcase-track__icon-pause" width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
+      </button>
+      <div class="showcase-track__meta">
+        <span class="showcase-track__artist">{{ track.artist }}</span>
+        <span class="showcase-track__song">{{ track.title }}</span>
+      </div>
+      <span class="showcase-track__tag">{{ track.subgenre }}</span>
+      {% if track.tag %}
+      <span class="showcase-track__tag showcase-track__tag--live">{{ track.tag }}</span>
+      {% endif %}
+      <div class="showcase-track__progress">
+        <div class="showcase-track__bar"></div>
+      </div>
+      <div class="showcase-track__times">
+        <span class="showcase-track__time">0:00</span>
+        <span class="showcase-track__duration">0:00</span>
+      </div>
+    </div>
+    {% endmacro %}
+
+    <!-- Before & After -->
+    <h3 class="work-heading reveal">Before & After</h3>
+    {% for track in audio.before_after %}{{ abTrack(track) }}{% endfor %}
+    <button class="show-more-btn" data-section="ba" style="display:none">Show More</button>
+
+    <!-- Selected Work -->
+    <div class="work-heading-row">
+      <h3 class="work-heading reveal">Selected Mixes</h3>
+      <a href="{{ tracks.credits_link }}" target="_blank" rel="noopener" class="credits-link">
+        {{ tracks.credits_text }}
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M17 7H7M17 7V17"/></svg>
+      </a>
+    </div>
+    {% for track in audio.showcase %}{{ showcaseTrack(track) }}{% endfor %}
+    <button class="show-more-btn" data-section="showcase" style="display:none">Show More</button>
+  </div>
+</section>
+
+<!-- Photo Break -->
+<div class="section-photo">
+  <img src="{{ '/assets/images/picks/mjm-9576.jpg' | url }}" alt="Daniel Tureck working at the console" width="1920" height="1280" loading="lazy" decoding="async" style="object-position: 30% 50%">
+</div>
+
 <!-- Studio -->
-<section class="studio">
+<section class="studio" id="studio">
   <div class="container">
-    <div class="studio__content">
-      <div class="studio__text">
-        <p class="section-label">The Space</p>
-        <h3 class="studio__heading">{{ studio.heading }}</h3>
-        {% for paragraph in studio.paragraphs %}
-        <p>{{ paragraph }}</p>
-        {% endfor %}
+    <h2 class="section-label">RobotSlap Studios</h2>
+    <div class="studio__highlights reveal">
+      {% for item in studio.highlights %}
+      <div class="studio-card">
+        <img src="{{ item.image | url }}" alt="{{ item.headline }}" class="studio-card__image" loading="lazy" decoding="async">
+        <div class="studio-card__body">
+          <h3 class="highlight-card__headline">{{ item.headline }}</h3>
+          <p class="highlight-card__text">{{ item.text }}</p>
+        </div>
       </div>
-      <div class="studio__photo">
-        <img src="{{ studio.image | url }}" alt="{{ studio.name }}" width="1920" height="1280" loading="lazy" decoding="async">
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<!-- Photo Break -->
+<div class="section-photo">
+  <img src="{{ '/assets/images/picks/mjm-9605.jpg' | url }}" alt="Wide view of Robot Slap Studios" width="1920" height="1280" loading="lazy" decoding="async" style="object-position: 30% 50%">
+</div>
+
+<!-- Contact -->
+<section class="cta" id="contact">
+  <div class="container">
+    <h2 class="section-label">Contact</h2>
+
+    <div>
+      <div class="contact-tabs">
+        <button class="contact-tab active" data-tab="mix">Request a Mix</button>
+        <button class="contact-tab" data-tab="inquiry">General Inquiry</button>
+      </div>
+
+      <div class="contact-form-panel active" data-panel="mix">
+        <form class="form form--mix" action="https://formspree.io/f/placeholder" method="POST">
+          <div class="form__row">
+            <div class="form__field">
+              <label class="form__label" for="mix-name">Name</label>
+              <input class="form__input" type="text" id="mix-name" name="name" required>
+            </div>
+            <div class="form__field">
+              <label class="form__label" for="mix-email">Email</label>
+              <input class="form__input" type="email" id="mix-email" name="email" required>
+            </div>
+          </div>
+          <div class="form__row">
+            <div class="form__field">
+              <label class="form__label" for="mix-artist">Artist Name</label>
+              <input class="form__input" type="text" id="mix-artist" name="artist" required>
+            </div>
+            <div class="form__field">
+              <label class="form__label" for="mix-project">Project Title</label>
+              <input class="form__input" type="text" id="mix-project" name="project">
+            </div>
+          </div>
+          <div class="form__row">
+            <div class="form__field">
+              <label class="form__label" for="mix-songs"># of Songs</label>
+              <input class="form__input" type="number" id="mix-songs" name="songs" min="1">
+            </div>
+            <div class="form__field">
+              <label class="form__label" for="mix-timeline">Timeline</label>
+              <select class="form__input form__select" id="mix-timeline" name="timeline">
+                <option value="">Select...</option>
+                <option value="1-2 weeks">1–2 weeks</option>
+                <option value="3-4 weeks">3–4 weeks</option>
+                <option value="1-2 months">1–2 months</option>
+                <option value="flexible">Flexible</option>
+              </select>
+            </div>
+          </div>
+          <div class="form__field">
+            <label class="form__label" for="mix-link">Link to Files</label>
+            <input class="form__input" type="url" id="mix-link" name="files_link" placeholder="Dropbox, Google Drive, WeTransfer...">
+          </div>
+          <div class="form__field">
+            <label class="form__label" for="mix-notes">Notes</label>
+            <textarea class="form__input form__textarea" id="mix-notes" name="notes" rows="4" placeholder="Tell me about the project - references, vibe, anything that helps."></textarea>
+          </div>
+          <button class="btn btn--orange form__submit" type="submit">Send Request</button>
+        </form>
+      </div>
+
+      <div class="contact-form-panel" data-panel="inquiry">
+        <form class="form form--inquiry" action="https://formspree.io/f/placeholder" method="POST">
+          <div class="form__field">
+            <label class="form__label" for="inquiry-name">Name</label>
+            <input class="form__input" type="text" id="inquiry-name" name="name" required>
+          </div>
+          <div class="form__field">
+            <label class="form__label" for="inquiry-email">Email</label>
+            <input class="form__input" type="email" id="inquiry-email" name="email" required>
+          </div>
+          <div class="form__field">
+            <label class="form__label" for="inquiry-message">Message</label>
+            <textarea class="form__input form__textarea" id="inquiry-message" name="message" rows="6" required placeholder="What's on your mind?"></textarea>
+          </div>
+          <button class="btn btn--orange form__submit" type="submit">Send Message</button>
+        </form>
       </div>
     </div>
-  </div>
-</section>
 
-<!-- Listen -->
-<section class="listen">
-  <div class="container">
-    <p class="section-label">The Work</p>
-    <h2 class="listen__heading">Listen</h2>
-    <p class="listen__artists">{{ tracks.artists }}</p>
-
-    {% if tracks.player_embed %}
-    <div class="player-embed">
-      {{ tracks.player_embed | safe }}
-    </div>
-    {% else %}
-    <div class="player-embed">
-      <p>Player Embed</p>
-    </div>
-    {% endif %}
-
-    <a href="{{ tracks.credits_link }}" target="_blank" rel="noopener" class="credits-link">
-      {{ tracks.credits_text }}
-      <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M7 17L17 7M17 7H7M17 7V17"/></svg>
-    </a>
-  </div>
-</section>
-
-<!-- Wide Photo -->
-<section class="wide-photo">
-  <div class="wide-photo__inner">
-    <img src="{{ photos.wide.image | url }}" alt="{{ photos.wide.alt }}" width="1920" height="823" loading="lazy" decoding="async">
-  </div>
-</section>
-
-<!-- CTA -->
-<section class="cta">
-  <div class="container">
-    <h2 class="cta__heading">{{ cta.heading }}</h2>
-    <div class="cta__buttons">
+    <div class="cta__links">
       {% if cta.instagram_url %}
-      <a href="{{ cta.instagram_url }}" target="_blank" rel="noopener" class="btn btn--white">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
-        Instagram
+      <a href="{{ cta.instagram_url }}" target="_blank" rel="noopener" class="btn btn--icon" aria-label="Instagram">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
       </a>
       {% endif %}
       {% if cta.email %}
-      <a href="mailto:{{ cta.email }}" class="btn btn--outline">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M22 6L12 13L2 6"/></svg>
-        Email
+      <a href="mailto:{{ cta.email }}" class="btn btn--icon" aria-label="Email">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M22 6L12 13L2 6"/></svg>
       </a>
       {% endif %}
     </div>
   </div>
+</section>
+
+<!-- Footer Photo -->
+<section class="footer-photo">
+  <img src="{{ photos.footer.image | url }}" alt="{{ photos.footer.alt }}" width="1920" height="1280" loading="lazy" decoding="async" style="object-position: 30% 40%">
 </section>
 
 <!-- Footer -->
 <footer class="footer">
   <div class="footer__inner">
-    <p class="footer__copy">&copy; 2026 {{ bio.name }}</p>
-    <p class="footer__copy">Orange County, CA</p>
+    <div class="footer__left">
+      <p class="footer__copy">&copy; 2026 {{ bio.name }}</p>
+      <a href="{{ '/podcasts/' | url }}" class="footer__link">Podcasts & Brands</a>
+    </div>
+    <span class="footer__link">Designed by <a href="https://mjm.earth" target="_blank" rel="noopener" class="footer__link--mjm">Michael J Morgan</a></span>
   </div>
 </footer>
