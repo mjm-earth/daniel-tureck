@@ -91,7 +91,7 @@ layout: base.njk
     <h2 class="section-label">Mixes</h2>
 
     <!-- Subgenre Filters -->
-    <div class="subgenre-filters reveal">
+    <div class="subgenre-filters">
       <button class="subgenre-filter active" data-filter="all">All</button>
       {% for sub in audio.subgenres %}
       <button class="subgenre-filter" data-filter="{{ sub }}">{{ sub }}</button>
@@ -152,13 +152,13 @@ layout: base.njk
     {% endmacro %}
 
     <!-- Before & After -->
-    <h3 class="work-heading reveal">Before & After</h3>
+    <h3 class="work-heading">Before & After</h3>
     {% for track in audio.before_after %}{{ abTrack(track) }}{% endfor %}
     <button class="show-more-btn" data-section="ba" style="display:none">Show More</button>
 
     <!-- Selected Work -->
     <div class="work-heading-row">
-      <h3 class="work-heading reveal">Selected Mixes</h3>
+      <h3 class="work-heading">Selected Mixes</h3>
       <a href="{{ tracks.credits_link }}" target="_blank" rel="noopener" class="credits-link">
         {{ tracks.credits_text }}
         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M17 7H7M17 7V17"/></svg>
@@ -178,10 +178,10 @@ layout: base.njk
 <section class="studio" id="studio">
   <div class="container">
     <h2 class="section-label">RobotSlap Studios</h2>
-    <div class="studio__highlights reveal">
+    <div class="studio__highlights">
       {% for item in studio.highlights %}
       <div class="studio-card">
-        <img src="{{ item.image | url }}" alt="{{ item.headline }}" class="studio-card__image" loading="lazy" decoding="async">
+        <img src="{{ item.image | url }}" alt="{{ item.headline }}" class="studio-card__image" width="800" height="600" loading="lazy" decoding="async">
         <div class="studio-card__body">
           <h3 class="highlight-card__headline">{{ item.headline }}</h3>
           <p class="highlight-card__text">{{ item.text }}</p>

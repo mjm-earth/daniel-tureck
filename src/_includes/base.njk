@@ -5,25 +5,34 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>{{ pageTitle or site.title }}</title>
   <meta name="description" content="{{ pageDescription or site.description }}">
+  <meta name="author" content="{{ bio.name }}">
+  <meta name="theme-color" content="#F5F0E8">
 
   <!-- Open Graph -->
   <meta property="og:title" content="{{ pageTitle or site.title }}">
   <meta property="og:description" content="{{ pageDescription or site.description }}">
-  <meta property="og:image" content="{{ site.url }}{{ bio.photo }}">
-  <meta property="og:url" content="{{ site.url }}/">
+  <meta property="og:image" content="{{ site.url }}{{ bio.photo | url }}">
+  <meta property="og:url" content="{{ site.url }}{{ page.url }}">
   <meta property="og:type" content="website">
+  <meta property="og:site_name" content="{{ bio.name }} — {{ bio.headline }}">
+  <meta property="og:locale" content="en_US">
 
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="{{ site.title }}">
-  <meta name="twitter:description" content="{{ site.description }}">
-  <meta name="twitter:image" content="{{ site.url }}{{ bio.photo }}">
+  <meta name="twitter:title" content="{{ pageTitle or site.title }}">
+  <meta name="twitter:description" content="{{ pageDescription or site.description }}">
+  <meta name="twitter:image" content="{{ site.url }}{{ bio.photo | url }}">
 
   <!-- Canonical -->
-  <link rel="canonical" href="{{ site.url }}/">
+  <link rel="canonical" href="{{ site.url }}{{ page.url }}">
 
   <!-- Favicon -->
   <link rel="icon" type="image/svg+xml" href="{{ '/assets/images/robot-slap-logo.svg' | url }}">
+  <link rel="icon" type="image/png" sizes="32x32" href="{{ '/assets/images/favicon-32.png' | url }}">
+  <link rel="apple-touch-icon" sizes="180x180" href="{{ '/assets/images/apple-touch-icon.png' | url }}">
+
+  <!-- Preload hero image for faster LCP -->
+  <link rel="preload" as="image" href="{{ '/assets/images/robot-slap-logo.svg' | url }}">
 
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -41,11 +50,22 @@
     "jobTitle": "{{ bio.headline }}",
     "description": "{{ site.description }}",
     "url": "{{ site.url }}/",
-    "image": "{{ site.url }}{{ bio.photo }}",
+    "image": "{{ site.url }}{{ bio.photo | url }}",
+    "sameAs": [
+      "{{ cta.instagram_url }}"
+    ],
+    "email": "{{ cta.email }}",
     "workLocation": {
       "@type": "Place",
-      "name": "{{ studio.name }}"
-    }
+      "name": "{{ studio.name }}",
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "Long Beach",
+        "addressRegion": "CA",
+        "addressCountry": "US"
+      }
+    },
+    "knowsAbout": ["Audio Mixing", "Music Production", "R&B", "Hip-Hop", "Soul", "Pop", "Podcast Production"]
   }
   </script>
 </head>

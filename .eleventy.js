@@ -4,9 +4,11 @@ module.exports = function (eleventyConfig) {
   eleventyConfig.addPassthroughCopy("src/js");
   eleventyConfig.addPassthroughCopy("src/assets");
   eleventyConfig.addPassthroughCopy("src/admin");
+  eleventyConfig.addPassthroughCopy({ "src/robots.txt": "robots.txt" });
+  eleventyConfig.addPassthroughCopy({ "src/CNAME": "CNAME" });
 
   return {
-    pathPrefix: "/daniel-tureck/",
+    pathPrefix: "/",
     dir: {
       input: "src",
       output: "_site",

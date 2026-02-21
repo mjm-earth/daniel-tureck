@@ -337,6 +337,7 @@ img {
   min-height: 100vh;
   display: flex;
   align-items: center;
+  padding: 64px 0;
 }
 
 /* ---- Subgenre Filters ---- */
@@ -811,7 +812,7 @@ img {
 .cta {
   background-color: var(--cream);
   min-height: 100vh;
-  padding: 0 48px;
+  padding: 64px 48px;
   color: var(--charcoal);
   display: flex;
   align-items: center;
@@ -1374,12 +1375,22 @@ img {
     width: 100%;
   }
 
+  .about,
+  .listen,
+  .studio,
+  .cta {
+    min-height: auto;
+    padding-top: 64px;
+    padding-bottom: 64px;
+  }
+
   .studio__highlights {
     grid-template-columns: 1fr;
   }
 
   .cta {
-    padding: 0 24px;
+    padding-left: 24px;
+    padding-right: 24px;
   }
 
   .contact-tab {
