@@ -51,15 +51,6 @@
       "subgenre": "Hip-Hop",
       "before_url": "/assets/audio/before-after/sterling-victorian-come-alive-before.mp3",
       "after_url": "/assets/audio/before-after/sterling-victorian-come-alive-after.mp3"
-    },
-    {
-      "artist": "test",
-      "title": "test",
-      "subgenre": "R&B",
-      "live": true,
-      "featured": "all",
-      "before_url": "/assets/audio/before-after/test-test-before.mp3",
-      "after_url": "/assets/audio/before-after/test-test-after.mp3"
     }
   ],
   "showcase": [
