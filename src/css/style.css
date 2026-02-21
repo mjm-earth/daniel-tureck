@@ -1460,22 +1460,29 @@ img {
 
 
 @media (max-width: 480px) {
+  .nav {
+    padding: 8px 12px;
+    left: 8px;
+    right: 8px;
+  }
+
   .nav__links {
-    gap: 20px;
+    gap: 0;
   }
 
   .nav .nav__link {
-    font-size: 0.55rem;
+    font-size: 0.5rem;
+    padding: 4px 4px;
   }
 
   .nav__icon {
-    width: 18px;
-    height: 18px;
+    width: 16px;
+    height: 16px;
   }
 
   .nav__icon--robot {
-    width: 20px;
-    height: 20px;
+    width: 18px;
+    height: 18px;
   }
 
   .hero__name {

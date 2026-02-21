@@ -22,6 +22,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const navLinks = fixedNav ? fixedNav.querySelectorAll('.nav__link') : [];
   const sections = [
     { id: null, el: hero },
+    { id: 'about', el: document.getElementById('about') },
     { id: 'work', el: document.getElementById('work') },
     { id: 'studio', el: document.getElementById('studio') },
     { id: 'contact', el: document.getElementById('contact') }
