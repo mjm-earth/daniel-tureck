@@ -2014,19 +2014,25 @@
     }
 
     // === ANALYTICS TAB ===
-    const PH_PROJECT_ID = 'phc_sYMa8kqtzsHFArBW32efB8qD5o2K6qUxDv0YmFTjk7o';
-    const PH_HOST = 'https://us.i.posthog.com';
-    let analyticsCache = {};
+    const PH_HOST = 'https://us.posthog.com';
+
+    function getPhKey() { return localStorage.getItem('ph_api_key'); }
 
     async function phQuery(payload) {
+      const key = getPhKey();
+      if (!key) throw new Error('NO_KEY');
       const res = await fetch(`${PH_HOST}/api/projects/@current/query/`, {
         method: 'POST',
         headers: {
-          'Authorization': `Bearer ${PH_PROJECT_ID}`,
+          'Authorization': `Bearer ${key}`,
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({ query: payload })
       });
+      if (res.status === 401 || res.status === 403) {
+        localStorage.removeItem('ph_api_key');
+        throw new Error('INVALID_KEY');
+      }
       if (!res.ok) throw new Error(`PostHog API ${res.status}`);
       return res.json();
     }
@@ -2044,7 +2050,6 @@
     async function fetchAnalytics(period) {
       const { start, end } = dateRange(period);
 
-      // Use HogQL to query pageviews and unique visitors
       const [pageviewRes, topPagesRes] = await Promise.all([
         phQuery({
           kind: 'HogQLQuery',
@@ -2084,13 +2089,74 @@
       };
     }
 
-    async function renderAnalytics(period) {
+    function renderAnalyticsAuth() {
       const container = document.getElementById('tab-analytics');
       container.innerHTML = '';
 
-      // Period selector
+      const card = document.createElement('div');
+      card.className = 'form-card';
+      card.innerHTML = `
+        <h3>Connect PostHog</h3>
+        <p style="font-size:14px;color:#666;line-height:1.5;margin-bottom:16px">
+          Enter a PostHog <strong>Personal API Key</strong> to view analytics here.
+        </p>
+        <ol style="font-size:13px;color:#888;line-height:1.8;margin-bottom:20px;padding-left:20px">
+          <li>Open <a href="https://us.posthog.com/settings/user-api-keys" target="_blank" style="color:#5E6B4A">PostHog → Settings → Personal API Keys</a></li>
+          <li>Click <strong>Create personal API key</strong></li>
+          <li>Name it "Admin Dashboard" and give it <strong>read</strong> access</li>
+          <li>Copy the key (starts with <code>phx_</code>) and paste it below</li>
+        </ol>
+        <div class="form-row full">
+          <div class="form-field">
+            <label>Personal API Key</label>
+            <input type="password" id="ph-key-input" placeholder="phx_xxxxxxxxxxxx" style="width:100%;padding:8px 12px;border:1px solid #ddd;border-radius:6px;font-size:14px;outline:none">
+          </div>
+        </div>
+        <div id="ph-key-error" style="color:#c0392b;font-size:13px;margin-bottom:12px;display:none"></div>
+        <button class="btn btn-primary" id="ph-key-btn">Connect</button>
+      `;
+      container.appendChild(card);
+
+      card.querySelector('#ph-key-btn').addEventListener('click', async () => {
+        const key = card.querySelector('#ph-key-input').value.trim();
+        if (!key) return;
+        const btn = card.querySelector('#ph-key-btn');
+        const errEl = card.querySelector('#ph-key-error');
+        btn.disabled = true;
+        btn.textContent = 'Connecting...';
+        errEl.style.display = 'none';
+        try {
+          localStorage.setItem('ph_api_key', key);
+          await phQuery({ kind: 'HogQLQuery', query: 'SELECT 1' });
+          renderAnalytics('7d');
+        } catch (e) {
+          localStorage.removeItem('ph_api_key');
+          errEl.textContent = 'Invalid key or no access. Make sure it has read permissions.';
+          errEl.style.display = 'block';
+        } finally {
+          btn.disabled = false;
+          btn.textContent = 'Connect';
+        }
+      });
+
+      card.querySelector('#ph-key-input').addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') card.querySelector('#ph-key-btn').click();
+      });
+    }
+
+    async function renderAnalytics(period) {
+      if (!getPhKey()) { renderAnalyticsAuth(); return; }
+
+      const container = document.getElementById('tab-analytics');
+      container.innerHTML = '';
+
+      // Period selector + disconnect
+      const topBar = document.createElement('div');
+      topBar.style.cssText = 'display:flex;justify-content:space-between;align-items:center;margin-bottom:20px';
+
       const periodBar = document.createElement('div');
       periodBar.className = 'analytics-period';
+      periodBar.style.marginBottom = '0';
       ['7d', '30d', '90d'].forEach(p => {
         const labels = { '7d': 'Last 7 days', '30d': 'Last 30 days', '90d': 'Last 90 days' };
         const btn = document.createElement('button');
@@ -2099,7 +2165,20 @@
         btn.addEventListener('click', () => renderAnalytics(p));
         periodBar.appendChild(btn);
       });
-      container.appendChild(periodBar);
+      topBar.appendChild(periodBar);
+
+      const disconnectBtn = document.createElement('button');
+      disconnectBtn.className = 'btn-logout';
+      disconnectBtn.textContent = 'Disconnect';
+      disconnectBtn.style.cssText = 'background:none;border:none;color:#888;font-size:13px;cursor:pointer';
+      disconnectBtn.addEventListener('click', () => {
+        localStorage.removeItem('ph_api_key');
+        dataLoaded.analytics = false;
+        renderAnalyticsAuth();
+      });
+      topBar.appendChild(disconnectBtn);
+
+      container.appendChild(topBar);
 
       // Loading state
       const loading = document.createElement('div');
@@ -2145,6 +2224,11 @@
             section.appendChild(row);
           });
           container.appendChild(section);
+        } else {
+          const empty = document.createElement('div');
+          empty.className = 'analytics-section';
+          empty.innerHTML = '<p style="font-size:14px;color:#888;text-align:center;padding:20px 0">No pageview data yet. Analytics will appear after visitors start hitting the site.</p>';
+          container.appendChild(empty);
         }
 
         // Link to full PostHog dashboard
@@ -2157,8 +2241,16 @@
         container.appendChild(footer);
 
       } catch (e) {
-        loading.innerHTML = `<div style="color:#c0392b">Failed to load analytics: ${e.message}</div>
-          <p style="margin-top:12px;font-size:13px;color:#888">Analytics data may take a few hours to appear after first installing PostHog. <a href="https://us.posthog.com" target="_blank" style="color:#5E6B4A">Open PostHog Dashboard</a></p>`;
+        loading.remove();
+        if (e.message === 'INVALID_KEY' || e.message === 'NO_KEY') {
+          renderAnalyticsAuth();
+        } else {
+          const err = document.createElement('div');
+          err.className = 'empty-state';
+          err.innerHTML = `<div style="color:#c0392b">Failed to load analytics: ${e.message}</div>
+            <p style="margin-top:12px;font-size:13px;color:#888"><a href="https://us.posthog.com" target="_blank" style="color:#5E6B4A">Open PostHog Dashboard</a></p>`;
+          container.appendChild(err);
+        }
       }
     }
 
