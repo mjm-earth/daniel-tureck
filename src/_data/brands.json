@@ -110,13 +110,6 @@
       ]
     },
     {
-      "name": "test",
-      "projects": [
-        "testtest",
-        "test"
-      ]
-    },
-    {
       "name": "test2",
       "projects": [
         "test",
