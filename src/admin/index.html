@@ -614,12 +614,14 @@
       <button class="tab-btn" data-tab="showcase">Showcase</button>
       <button class="tab-btn" data-tab="before-after">Before / After</button>
       <button class="tab-btn" data-tab="seo">SEO</button>
+      <button class="tab-btn" data-tab="clients">Clients</button>
     </nav>
 
     <div id="tab-photos" class="tab-content active"></div>
     <div id="tab-showcase" class="tab-content"></div>
     <div id="tab-before-after" class="tab-content"></div>
     <div id="tab-seo" class="tab-content"></div>
+    <div id="tab-clients" class="tab-content"></div>
   </div>
 
   <div id="status-bar"></div>
@@ -646,7 +648,9 @@
     let audioData = null;
     let seoSiteData = null;
     let seoBioData = null;
-    let dataLoaded = { photos: false, audio: false, seo: false };
+    let brandsData = null;
+    let podcastsPageData = null;
+    let dataLoaded = { photos: false, audio: false, seo: false, clients: false };
 
     // === GITHUB API ===
     function getToken() {
@@ -883,6 +887,22 @@
             renderSEO();
           } catch (e) {
             document.getElementById('tab-seo').innerHTML = `<div class="empty-state" style="color:#c0392b">Failed to load SEO settings: ${e.message}</div>`;
+          }
+        }
+      } else if (tab === 'clients') {
+        if (!dataLoaded.clients) {
+          document.getElementById('tab-clients').innerHTML = '<div class="empty-state"><span class="spinner" style="border-color:rgba(0,0,0,0.15);border-top-color:#5E6B4A"></span> Loading clients...</div>';
+          try {
+            const [brandsResult, podcastsResult] = await Promise.all([
+              getJSON('src/_data/brands.json'),
+              getJSON('src/_data/podcasts_page.json')
+            ]);
+            brandsData = brandsResult.data;
+            podcastsPageData = podcastsResult.data;
+            dataLoaded.clients = true;
+            renderClients();
+          } catch (e) {
+            document.getElementById('tab-clients').innerHTML = `<div class="empty-state" style="color:#c0392b">Failed to load clients: ${e.message}</div>`;
           }
         }
       }
@@ -1502,6 +1522,158 @@
 
     function escAttr(str) {
       return String(str).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;');
+    }
+
+    // === CLIENTS TAB ===
+    function renderClients() {
+      const container = document.getElementById('tab-clients');
+      container.innerHTML = '';
+
+      // Podcasts page intro
+      const introCard = document.createElement('div');
+      introCard.className = 'form-card';
+      introCard.innerHTML = `
+        <h3>Podcasts Page</h3>
+        <div class="form-row full">
+          <div class="form-field">
+            <label>Page Title</label>
+            <input type="text" id="cl-page-title" value="${escAttr(podcastsPageData.title)}">
+          </div>
+        </div>
+        <div class="form-row full">
+          <div class="form-field">
+            <label>Meta Description</label>
+            <input type="text" id="cl-page-desc" value="${escAttr(podcastsPageData.description)}">
+          </div>
+        </div>
+        <div class="form-row full">
+          <div class="form-field">
+            <label>Intro Text</label>
+            <textarea id="cl-page-intro" rows="3" style="width:100%;padding:8px 12px;border:1px solid #ddd;border-radius:6px;font-size:14px;font-family:inherit;resize:vertical;outline:none">${escAttr(podcastsPageData.intro)}</textarea>
+          </div>
+        </div>
+        <div class="photo-actions">
+          <button class="btn btn-primary" id="cl-page-save" disabled>Save Page Settings</button>
+          <span class="unsaved-badge" id="cl-page-unsaved">Unsaved changes</span>
+        </div>
+      `;
+      container.appendChild(introCard);
+
+      const pageSaveBtn = introCard.querySelector('#cl-page-save');
+      const pageBadge = introCard.querySelector('#cl-page-unsaved');
+      introCard.querySelectorAll('input, textarea').forEach(el => {
+        el.addEventListener('input', () => { pageSaveBtn.disabled = false; pageBadge.classList.add('visible'); });
+      });
+
+      pageSaveBtn.addEventListener('click', async () => {
+        pageSaveBtn.disabled = true;
+        pageSaveBtn.textContent = 'Saving...';
+        showStatus('Saving page settings...', 'loading');
+        try {
+          podcastsPageData.title = introCard.querySelector('#cl-page-title').value.trim();
+          podcastsPageData.description = introCard.querySelector('#cl-page-desc').value.trim();
+          podcastsPageData.intro = introCard.querySelector('#cl-page-intro').value.trim();
+          await batchCommit([
+            { path: 'src/_data/podcasts_page.json', content: JSON.stringify(podcastsPageData, null, 2) + '\n', encoding: 'utf-8' }
+          ], 'admin: update podcasts page settings');
+          pageBadge.classList.remove('visible');
+          showStatus('Podcasts page updated. Site will rebuild in ~30 seconds.');
+        } catch (e) {
+          showStatus(`Error: ${e.message}`, 'error');
+        } finally {
+          pageSaveBtn.textContent = 'Save Page Settings';
+        }
+      });
+
+      // Add client form
+      const addCard = document.createElement('div');
+      addCard.className = 'form-card';
+      addCard.innerHTML = `
+        <h3>Add Client</h3>
+        <div class="form-row">
+          <div class="form-field">
+            <label>Client / Brand Name</label>
+            <input type="text" id="cl-name" placeholder="e.g. Disney">
+          </div>
+          <div class="form-field">
+            <label>Projects (comma-separated)</label>
+            <input type="text" id="cl-projects" placeholder="e.g. Podcast Name, Another Show">
+          </div>
+        </div>
+        <button class="btn btn-primary" id="cl-add-btn">Add Client</button>
+      `;
+      container.appendChild(addCard);
+
+      addCard.querySelector('#cl-add-btn').addEventListener('click', async () => {
+        const name = addCard.querySelector('#cl-name').value.trim();
+        const projectsStr = addCard.querySelector('#cl-projects').value.trim();
+        if (!name) { showStatus('Client name is required.', 'error'); return; }
+        const projects = projectsStr ? projectsStr.split(',').map(p => p.trim()).filter(Boolean) : ['Podcast'];
+
+        const ok = await confirm(`Add <strong>${escAttr(name)}</strong> with ${projects.length} project${projects.length !== 1 ? 's' : ''}?`);
+        if (!ok) return;
+
+        const btn = addCard.querySelector('#cl-add-btn');
+        btn.disabled = true;
+        btn.textContent = 'Adding...';
+        showStatus('Adding client...', 'loading');
+
+        try {
+          brandsData.items.push({ name, projects });
+          await batchCommit([
+            { path: 'src/_data/brands.json', content: JSON.stringify(brandsData, null, 2) + '\n', encoding: 'utf-8' }
+          ], `admin: add client "${name}"`);
+          showStatus(`${name} added. Site will rebuild in ~30 seconds.`);
+          renderClients();
+        } catch (e) {
+          brandsData.items.pop();
+          showStatus(`Error: ${e.message}`, 'error');
+        } finally {
+          btn.disabled = false;
+          btn.textContent = 'Add Client';
+        }
+      });
+
+      // Client list
+      const list = document.createElement('div');
+      list.className = 'track-list';
+      list.innerHTML = `<h3>Clients & Brands <span class="track-list-count">(${brandsData.items.length})</span></h3>`;
+
+      brandsData.items.forEach((brand, index) => {
+        const item = document.createElement('div');
+        item.className = 'track-item';
+        item.innerHTML = `
+          <div class="track-info">
+            <div class="track-title">${escAttr(brand.name)}</div>
+            <div class="track-meta">${brand.projects.map(p => escAttr(p)).join(', ')}</div>
+          </div>
+          <button class="btn btn-danger">Remove</button>
+        `;
+        item.querySelector('.btn-danger').addEventListener('click', () => deleteClient(index));
+        list.appendChild(item);
+      });
+
+      container.appendChild(list);
+    }
+
+    async function deleteClient(index) {
+      const brand = brandsData.items[index];
+      const ok = await confirm(`Remove <strong>${escAttr(brand.name)}</strong>?`);
+      if (!ok) return;
+
+      showStatus('Removing client...', 'loading');
+      try {
+        brandsData.items.splice(index, 1);
+        await batchCommit([
+          { path: 'src/_data/brands.json', content: JSON.stringify(brandsData, null, 2) + '\n', encoding: 'utf-8' }
+        ], `admin: remove client "${brand.name}"`);
+        showStatus(`${brand.name} removed. Site will rebuild in ~30 seconds.`);
+        renderClients();
+      } catch (e) {
+        showStatus(`Error: ${e.message}`, 'error');
+        dataLoaded.clients = false;
+        loadTab('clients');
+      }
     }
 
     // === INIT ===
